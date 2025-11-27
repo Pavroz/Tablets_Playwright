@@ -1,15 +1,16 @@
+import re
 from time import sleep
 from pages.base_page import BasePage
 from locators import auth_locators as loc
 from locators import profiles_locators as locp
 import allure
-from playwright.async_api import expect
+from playwright.sync_api import expect, Page
 
 class AuthPage(BasePage):
     page_url = '/auth'
 
-    def __init__(self, driver):
-        super().__init__(driver)
+    def __init__(self, page):
+        super().__init__(page)
 
     def auth_correct_login_and_password(self, login, password):
         with allure.step(f'Ввод логина "{login}"'):
@@ -18,11 +19,11 @@ class AuthPage(BasePage):
             self.page.locator(loc.password).fill(password)
         with allure.step('Нажатие на кнопку авторизации'):
             self.page.locator(loc.auth_button).click()
-            sleep(1)
+            # sleep(1)
         current_url = self.page.url
         with allure.step('Проверка успешной авторизации'):
             # assert current_url == 'http://arm-tablets.01-bfv-server.stroki.loc/profiles'
-            expect(self.page.locator(locp.all_carts)).to_have_count(0)
+            self.page.wait_for_url('http://arm-tablets.01-bfv-server.stroki.loc/profiles', timeout=10000)
         return True
 
 
@@ -56,7 +57,7 @@ class AuthPage(BasePage):
             self.page.locator(loc.password).fill(password)
         recovery_active = self.page.locator(loc.recovery_conf_active)
         with allure.step(f'Проверка, что кнопка активна'):
-            assert "ant-switch-checked" in recovery_active.get_attribute("class")
+            expect(self.page.locator(loc.recovery_conf_active)).to_have_class(re.compile("ant-switch-checked"))
         # sleep(2)
         with allure.step('Нажатие на кнопку авторизации'):
             self.page.locator(loc.auth_button).click()
@@ -67,13 +68,16 @@ class AuthPage(BasePage):
         with allure.step(f'Ввод пароля "{password}"'):
             self.page.locator(loc.password).fill(password)
         recovery_active = self.page.locator(loc.recovery_conf_active)
-        with allure.step(f'Проверка, что кнопка активна'):
-            assert "ant-switch-checked" in recovery_active.get_attribute("class")
+        with (allure.step(f'Проверка, что кнопка активна')):
+            expect(self.page.locator('nz-switch[formcontrolname="personalization"] button')
+                   ).to_have_class(re.compile('.*ant-switch-checked.*'), timeout=5000)
 #         sleep(2)
         with allure.step(f'Деактивация кнопки'):
             recovery_active.click()
-        with allure.step(f'Проверка, что кнопка деактивирована'):
-            assert "ant-switch-checked" not in recovery_active.get_attribute("class")
+        with (allure.step(f'Проверка, что кнопка деактивирована')):
+            expect(self.page.locator('nz-switch[formcontrolname="personalization"] button')
+                   ).not_to_have_class(re.compile('.*ant-switch-checked.*'), timeout=5000)
+
 #         sleep(2)
         with allure.step('Нажатие на кнопку авторизации'):
             self.page.locator(loc.auth_button).click()

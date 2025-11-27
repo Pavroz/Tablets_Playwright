@@ -4,27 +4,27 @@ from time import sleep
 import allure
 import random
 import string
-from playwright.sync_api import expect
+from playwright.sync_api import expect, Page
 
 class ProfilesPage(BasePage):
     page_url = '/profiles'
 
-    def __init__(self, driver):
-        super().__init__(driver)
+    def __init__(self, page):
+        super().__init__(page)
 
 
     def get_all_carts(self):
         """Получение списка карточек для дальнейшего взаимодействия с ними (например нажатие)"""
-        return self.page.locator(loc.all_carts)
+        return self.page.locator(loc.all_carts).all() # ← .all() делает список
 
 
     def get_all_carts_titles(self):
         """Получение списка с названиями карточек"""
-        carts = self.get_all_carts()
+        carts = self.get_all_carts() # Теперь carts — List[Locator]
         titles = []
         for cart in carts:
             try:
-                title = cart.find_element(*loc.name_cart).text.strip()
+                title = cart.locator(*loc.name_cart).inner_text().strip()
                 titles.append(title)
             except Exception as e:
                 print(f"Ошибка при получении названия карточки: {e}")
@@ -44,27 +44,40 @@ class ProfilesPage(BasePage):
                          for _ in range(length - len(prefix)))
         return f'{prefix}{suffix}'
 
+    # def create_profile(self, description=None):
+    #     """Создает профиль и возвращает его имя"""
+    #     name = self.generate_profile_name()
+    #     with (allure.step('Создание профиля')):
+    #         try:
+    #             if name in self.get_all_carts_titles():
+    #                 # print(f'Профиль "{name}" уже существует')
+    #                 return None
+    #             self.page.locator(loc.create_profile_button).click()
+    #             name_field = self.page.locator(loc.name_field)
+    #             # sleep(1)
+    #             name_field.fill(name)
+    #             # name_field.send_keys(Keys.TAB)
+    #             if description:
+    #                 self.page.locator(loc.description_field).fill(description)
+    #             self.page.locator(loc.apply_modals_button).click()
+    #         except:
+    #             pass
+    #     # ПРОСТАЯ ПРОВЕРКА - ждем появления профиля по имени
+    #     with allure.step(f'Проверка ожидания появления профиля по его имени - "{name}"'):
+    #         expect(self.page.locator(f'//*[text()="{name}"]')).to_be_attached()
+    #         # expect(self.page.locator(f'//*[text()="{name}"]')).to_be_visible()
+    #     return name
     def create_profile(self, description=None):
-        """Создает профиль и возвращает его имя"""
         name = self.generate_profile_name()
-        with (allure.step('Создание профиля')):
-            try:
-                if name in self.get_all_carts_titles():
-                    # print(f'Профиль "{name}" уже существует')
-                    return None
-                self.page.locator(loc.create_profile_button).click()
-                name_field = self.page.locator(loc.name_field)
-                # sleep(1)
-                name_field.fill(name)
-                # name_field.send_keys(Keys.TAB)
-                if description:
-                    self.page.locator(loc.description_field).fill(description)
-                self.page.locator(loc.apply_modals_button).click()
-            except:
-                pass
-        # ПРОСТАЯ ПРОВЕРКА - ждем появления профиля по имени
-        with allure.step(f'Проверка ожидания появления профиля по его имени - "{name}"'):
-            assert self.page.locator(f'//*[text()="{name}"]')
+        # Убираем проверку на существование — генерация и так даёт уникальные имена
+        self.page.locator(loc.create_profile_button).click()
+        self.page.locator(loc.name_field).fill(name)
+        if description:
+            self.page.locator(loc.description_field).fill(description)
+        self.page.locator(loc.apply_modals_button).click()
+
+        # Ждём появления профиля
+        expect(self.page.get_by_text(name, exact=True)).to_be_visible()
         return name
 
     def create_existing_profile(self, name):
@@ -75,37 +88,31 @@ class ProfilesPage(BasePage):
                 self.page.locator(loc.create_profile_button).click()
                 self.page.locator(loc.name_field).fill(name)
                 with allure.step(f'Проверка, что кнопка создания заблокирована'):
-                    apply_button = self.page.locator(loc.apply_modals_button)
-                    # assert apply_button.get_attribute('disabled') == 'true'
-                    assert WebDriverWait(self.driver, 5).until(
-                        lambda d: self.driver.find_element(*loc.apply_modals_button
-                                                           ).get_attribute('disabled') is not False)
-                    self.page.locator(loc.cancel_modals_button).click()
+                    expect(self.page.locator(loc.apply_modals_button)).to_be_disabled()
+                self.page.locator(loc.cancel_modals_button).click()
 
     def delete_profile(self, profile_name):
         """Удаляет профиль по имени"""
         # Находим и кликаем кнопку удаления для профиля с нужным именем
         with allure.step('Нажатие на кнопку удаления'):
-            sleep(1)
+            # sleep(1)
             for attempt in range(3):  # 3 попытки
                 try:
                     delete_button = self.page.locator(
                          f'//*[text()="{profile_name}"]//ancestor::prominform-profile-card//span[@nztype="delete"]'
                     )
-                    self.driver.execute_script('arguments[0].scrollIntoView();', delete_button)
+                    # self.driver.execute_script('arguments[0].scrollIntoView();', delete_button)
                     delete_button.click()
                     break  # Если клик прошел, выходим из цикла
-                except StaleElementReferenceException:
+                except:
                     if attempt == 2:  # Последняя попытка
                         raise
-                    sleep(1)  # Ждем перед повторной попыткой
+                    # sleep(1)  # Ждем перед повторной попыткой
             with allure.step('Подтверждение удаления'):
                 self.page.locator(loc.yes_button_from_delete).click()
             # Ждем исчезновения профиля
             with allure.step('Ожидание удаления профиля'):
-                assert WebDriverWait(self.driver, 10).until(
-                    EC.invisibility_of_element_located((By.XPATH, f'//*[text()="{profile_name}"]'))
-                )
+                assert self.page.locator(f'//*[text()="{profile_name}"]')
 
 
     def edit_name_profile(self, name_profile):
@@ -115,7 +122,7 @@ class ProfilesPage(BasePage):
             edit_button = self.page.locator(
                  f'//*[text()="{name_profile}"]//ancestor::prominform-profile-card//span[@nztype="edit"]'
             )
-            self.driver.execute_script('arguments[0].scrollIntoView();', edit_button)
+            # self.driver.execute_script('arguments[0].scrollIntoView();', edit_button)
             edit_button.click()
         with allure.step('Очистка и заполнение поля ввода "Наименование"'):
             name_field = self.page.locator(loc.name_field)
@@ -131,13 +138,13 @@ class ProfilesPage(BasePage):
     def edit_description_profile(self, name_profile):
         """Изменение описания профиля"""
         new_description_profile = self.generate_profile_description()
-        sleep(1)
+        # sleep(1)
         # Поиск кнопки редактирования
         with allure.step('Нажатие на кнопку редактирования'):
             edit_button = self.page.locator(
                  f'//*[text()="{name_profile}"]//ancestor::prominform-profile-card//span[@nztype="edit"]'
             )
-            self.driver.execute_script('arguments[0].scrollIntoView();', edit_button)
+            # self.driver.execute_script('arguments[0].scrollIntoView();', edit_button)
             edit_button.click()
         with allure.step('Очистка и заполнение поля ввода "Описание профиля"'):
             description_field = self.page.locator(loc.description_field)
@@ -155,11 +162,11 @@ class ProfilesPage(BasePage):
                     edit_button = self.page.locator(
                          f'//*[text()="{name_profile}"]//ancestor::prominform-profile-card//span[@nztype="edit"]'
                     )
-                    self.driver.execute_script('arguments[0].scrollIntoView();', edit_button)
+                    # self.driver.execute_script('arguments[0].scrollIntoView();', edit_button)
                     edit_button.click()
                     break
-                except StaleElementReferenceException:
-                    sleep(1)
+                except:
+                    # sleep(1)
                     continue
             else:
                 raise Exception('Не удалось нажать кнопку редактирования')
@@ -175,7 +182,7 @@ class ProfilesPage(BasePage):
             edit_button = self.page.locator(
                  f'//*[text()="{name_profile}"]//ancestor::prominform-profile-card//span[@nztype="edit"]'
             )
-            self.driver.execute_script('arguments[0].scrollIntoView();', edit_button)
+            # self.driver.execute_script('arguments[0].scrollIntoView();', edit_button)
             edit_button.click()
         with allure.step('Очистка и заполнение полей ввода "Наименование" и "Описание профиля"'):
             name_field = self.page.locator(loc.name_field)
@@ -218,16 +225,14 @@ class ProfilesPage(BasePage):
         copy_button = self.page.locator(
              f'//*[text()="{name}"]//ancestor::prominform-profile-card//span[@nztype="copy"]'
         )
-        self.driver.execute_script('arguments[0].scrollIntoView();', copy_button)
+        # self.driver.execute_script('arguments[0].scrollIntoView();', copy_button)
         copy_button.click()
         name_field = self.page.locator(loc.name_field)
         name_field.clear()
         name_field.fill(name)
         apply_button = self.page.locator(loc.apply_modals_button)
         # assert apply_button.get_attribute('disabled') == 'true'
-        assert WebDriverWait(self.driver, 5).until(
-            lambda d: self.driver.find_element(*loc.apply_modals_button
-                                               ).get_attribute('disabled') is not False)
+        expect(self.page.locator(loc.apply_modals_button)).to_be_disabled()
         self.page.locator(loc.cancel_modals_button).click()
 
     def create_max_number_of_characters_profile(self, quantity=256):
@@ -238,9 +243,7 @@ class ProfilesPage(BasePage):
         name_field.fill(name)
         apply_button = self.page.locator(loc.apply_modals_button)
         # assert apply_button.get_attribute('disabled') == 'true'
-        assert WebDriverWait(self.driver, 5).until(
-            lambda d: self.driver.find_element(*loc.apply_modals_button
-                                               ).get_attribute('disabled') is not False)
+        expect(self.page.locator(loc.apply_modals_button)).to_be_disabled()
 
     def create_an_empty_profile(self):
         self.page.locator(loc.create_profile_button).click()
@@ -252,7 +255,7 @@ class ProfilesPage(BasePage):
         go_to_profile_button = self.page.locator(
              f'//*[text()="{name}"]//ancestor::prominform-profile-card//div[@class="ant-card-body"]'
         )
-        self.driver.execute_script('arguments[0].scrollIntoView();', go_to_profile_button)
+        # self.driver.execute_script('arguments[0].scrollIntoView();', go_to_profile_button)
         go_to_profile_button.click()
 
     # def activate_profile(self, name_profile):

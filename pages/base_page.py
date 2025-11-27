@@ -17,5 +17,5 @@ class BasePage:
             self.page.goto(self.base_url)
 
     def go_to_back(self):
-        back_button = 'i[nztype="left"]'
+        back_button = 'nz-page-header i[nztype="left"]'
         self.page.locator(back_button).click()
