@@ -1,7 +1,3 @@
-
-
-
-
 login = 'input[formcontrolname="login"]'
 password = 'input[formcontrolname="password"]'
 recovery_conf_active = '.ant-switch-checked'

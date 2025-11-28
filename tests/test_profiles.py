@@ -1,6 +1,6 @@
 import allure
 import pytest
-
+from time import sleep
 
 # ТЕСТЫ ПАРАЛЛЕЛИТЬ ТОЛЬКО НА ДВА ОКНА
 @allure.feature('Страница профилей')
@@ -81,3 +81,14 @@ class TestProfiles:
     @pytest.mark.profiles
     def test_create_an_empty_profile(self, auth, profiles_page):
         profiles_page.create_an_empty_profile()
+
+    def test_activate_profile(self, auth, profiles_page):
+        name = profiles_page.create_profile()
+        profiles_page.activate_profile(name)
+        profiles_page.delete_profile(name)
+
+    def test_deactivate_profile(self, auth, profiles_page):
+        name = profiles_page.create_profile()
+        profiles_page.activate_profile(name)
+        profiles_page.deactivate_profile(name)
+        profiles_page.delete_profile(name)

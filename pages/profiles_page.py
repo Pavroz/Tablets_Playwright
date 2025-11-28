@@ -1,3 +1,5 @@
+import re
+
 from pages.base_page import BasePage
 from locators import profiles_locators as loc
 from time import sleep
@@ -80,18 +82,18 @@ class ProfilesPage(BasePage):
         expect(self.page.get_by_text(name, exact=True)).to_be_visible()
         return name
 
-    def create_existing_profile(self, name):
+    def create_existing_profile(self, name_profile):
         """Создает существующий профиль"""
         with allure.step('Создание существующего профиля профиля'):
-            if name in self.get_all_carts_titles():
+            if name_profile in self.get_all_carts_titles():
                 # print(f'Профиль "{name}" уже существует')
                 self.page.locator(loc.create_profile_button).click()
-                self.page.locator(loc.name_field).fill(name)
+                self.page.locator(loc.name_field).fill(name_profile)
                 with allure.step(f'Проверка, что кнопка создания заблокирована'):
                     expect(self.page.locator(loc.apply_modals_button)).to_be_disabled()
                 self.page.locator(loc.cancel_modals_button).click()
 
-    def delete_profile(self, profile_name):
+    def delete_profile(self, name_profile):
         """Удаляет профиль по имени"""
         # Находим и кликаем кнопку удаления для профиля с нужным именем
         with allure.step('Нажатие на кнопку удаления'):
@@ -99,7 +101,7 @@ class ProfilesPage(BasePage):
             for attempt in range(3):  # 3 попытки
                 try:
                     delete_button = self.page.locator(
-                         f'//*[text()="{profile_name}"]//ancestor::prominform-profile-card//span[@nztype="delete"]'
+                         f'//*[text()="{name_profile}"]//ancestor::prominform-profile-card//span[@nztype="delete"]'
                     )
                     # self.driver.execute_script('arguments[0].scrollIntoView();', delete_button)
                     delete_button.click()
@@ -112,7 +114,7 @@ class ProfilesPage(BasePage):
                 self.page.locator(loc.yes_button_from_delete).click()
             # Ждем исчезновения профиля
             with allure.step('Ожидание удаления профиля'):
-                assert self.page.locator(f'//*[text()="{profile_name}"]')
+                assert self.page.locator(f'//*[text()="{name_profile}"]')
 
 
     def edit_name_profile(self, name_profile):
@@ -220,16 +222,16 @@ class ProfilesPage(BasePage):
             assert self.page.locator(f'//*[text()="{new_name_profile}"]')
         return new_name_profile
 
-    def copy_existing_profile(self, name):
+    def copy_existing_profile(self, name_profile):
         """Копирование существуюшего профиля"""
         copy_button = self.page.locator(
-             f'//*[text()="{name}"]//ancestor::prominform-profile-card//span[@nztype="copy"]'
+             f'//*[text()="{name_profile}"]//ancestor::prominform-profile-card//span[@nztype="copy"]'
         )
         # self.driver.execute_script('arguments[0].scrollIntoView();', copy_button)
         copy_button.click()
         name_field = self.page.locator(loc.name_field)
         name_field.clear()
-        name_field.fill(name)
+        name_field.fill(name_profile)
         apply_button = self.page.locator(loc.apply_modals_button)
         # assert apply_button.get_attribute('disabled') == 'true'
         expect(self.page.locator(loc.apply_modals_button)).to_be_disabled()
@@ -251,13 +253,24 @@ class ProfilesPage(BasePage):
         # assert apply_button.get_attribute('disabled') == 'true'
         expect(self.page.locator(loc.apply_modals_button)).to_be_disabled()
 
-    def go_to_profile(self, name):
+    def go_to_profile(self, name_profile):
         go_to_profile_button = self.page.locator(
-             f'//*[text()="{name}"]//ancestor::prominform-profile-card//div[@class="ant-card-body"]'
+             f'//*[text()="{name_profile}"]//ancestor::prominform-profile-card//div[@class="ant-card-body"]'
         )
         # self.driver.execute_script('arguments[0].scrollIntoView();', go_to_profile_button)
         go_to_profile_button.click()
 
-    # def activate_profile(self, name_profile):
-    #     activate_button = self.wait_for_clickable(loc.activate_profile_button)
-    #     activate_button.click()
+    def activate_profile(self, name_profile):
+        switch_button = self.page.locator(
+            f'//*[text()="{name_profile}"]{loc.switch_button}'
+        )
+        switch_button.click()
+        expect(switch_button).to_have_class(re.compile('.*ant-switch-checked.*'))
+
+    def deactivate_profile(self, name_profile):
+        switch_button = self.page.locator(
+            f'//*[text()="{name_profile}"]{loc.switch_button}'
+        )
+        switch_button.click()
+        # проверяем, что класс "ant-switch-checked" пропал
+        expect(switch_button).not_to_have_class(re.compile(".*ant-switch-checked.*"))

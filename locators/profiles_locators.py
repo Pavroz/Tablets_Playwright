@@ -1,4 +1,3 @@
-
 # Список профилей
 all_carts = "prominform-profile-card" # Весь список профилей
 name_cart = ".profile-card__title span[nz-typography]" # Получение имени профиля
@@ -25,3 +24,10 @@ description_field_is_not_null = 'textarea.ng-untouched'
 apply_modals_button = '.modal-footer button[nztype="primary"]'
 # Отмена изменений
 cancel_modals_button = '//span[text()="Отмена"]'
+
+# activate_button = '.ant-switch-small'
+activate_button = '//button[@class="ant-switch ant-switch-small"]'
+is_active_button = '.ant-switch-checked'
+deactivate_button = '//button[@class="ant-switch ant-switch-small ant-switch-checked"]'
+is_inactive_button = '.ant-switch-handle'
+switch_button = '//ancestor::prominform-profile-card//button[contains(@class,"ant-switch")]'
