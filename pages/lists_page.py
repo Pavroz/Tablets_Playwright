@@ -100,16 +100,36 @@ class ListsPage(BasePage):
         return None
 
     def view_added_image(self, lastname):
-        line_to_participant =self.page.locator(f'//*[text()="{lastname}"]')
+        line_to_participant = self.page.locator(f'//*[text()="{lastname}"]').first
         line_to_participant.click()
         self.page.locator(loc.view_image_button).click()
         modal = self.page.locator(loc.modal_with_image)
-        if modal.count() > 0:
+        no_image = self.page.locator(loc.no_image_notification)
+        btn_disabled = self.page.locator(loc.button_is_disable)
+        try:
+            # Ждём модалку с картинкой
+            modal.wait_for(state="visible", timeout=5000)
             expect(modal).to_be_visible()
-        elif self.page.locator(loc.no_image_notification).count() > 0:
-            expect(self.page.locator(loc.no_image_notification)).to_have_text(
-                'Для участника не загружено изображение!'
-            )
-        else:
-            expect(self.page.locator(loc.button_is_disable)).to_be_disabled()
+            return
+        except:
+            pass
+
+        try:
+            # Ждём уведомление об отсутствии изображения
+            no_image.wait_for(state="visible", timeout=2000)
+            expect(no_image).to_have_text('Для участника не загружено изображение!')
+            return
+        except:
+            pass
+
+        try:
+            # Ждём заблокированную кнопку
+            btn_disabled.wait_for(state="visible", timeout=2000)
+            expect(btn_disabled).to_be_disabled()
+            return
+        except:
+            pass
+
+            # Если ничего не появилось
+        raise Exception("Не найдено ни одно из ожидаемых состояний!")
 
