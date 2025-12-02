@@ -1,5 +1,5 @@
 import re
-from time import sleep
+
 from pages.base_page import BasePage
 from locators import auth_locators as loc
 from locators import profiles_locators as locp
