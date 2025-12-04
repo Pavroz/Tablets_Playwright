@@ -12,7 +12,7 @@ def page():
     with sync_playwright() as p:
         browser = p.chromium.launch(
             channel='chrome',
-            headless=False,
+            headless=True,
             args=['--start-maximized', '--disable-cache', '--incognito']
         )
         context = browser.new_context(no_viewport=True)

@@ -110,6 +110,7 @@ class ListsPage(BasePage):
             # Ждём модалку с картинкой
             modal.wait_for(state="visible", timeout=5000)
             expect(modal).to_be_visible()
+            self.page.locator(loc.modal_close_button).click()
             return
         except:
             pass

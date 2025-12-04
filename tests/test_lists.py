@@ -1,8 +1,6 @@
 import allure
 import pytest
 
-from pages.base_page import BasePage
-
 @allure.feature('Страница списка участников')
 class TestLists:
 
