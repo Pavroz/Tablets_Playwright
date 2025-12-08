@@ -1,3 +1,5 @@
+from typing import List, Dict
+
 from pages.base_page import BasePage
 from locators import lists_locators as loc
 from playwright.sync_api import Page, expect
@@ -134,3 +136,31 @@ class ListsPage(BasePage):
             # Если ничего не появилось
         raise Exception("Не найдено ни одно из ожидаемых состояний!")
 
+
+    def load_participant(self):
+        with self.page.expect_file_chooser() as fc_info:
+            self.page.locator(loc.load_button).click()
+        file_chooser = fc_info.value
+        file_chooser.set_files(loc.load_participant_file)
+
+    def get_all_participant(self) -> List[Dict[str, str]]:
+        """Возвращает список всех участников с данными"""
+        participants = []
+        rows = self.page.locator(loc.line_to_participant)
+        rows.first.wait_for(state="visible")  # ждём хотя бы одну строку
+        count = rows.count()
+
+        for i in range(count):
+            row = rows.nth(i)
+            cells = row.locator("td")
+            participant = {
+                "last_name": cells.nth(0).inner_text().strip(),
+                "first_name": cells.nth(1).inner_text().strip(),
+                "middle_name": cells.nth(2).inner_text().strip(),
+                "country": cells.nth(3).inner_text().strip(),
+                "extra": cells.nth(4).inner_text().strip(),
+                "status": cells.nth(5).inner_text().strip(),
+            }
+            participants.append(participant)
+            print(f'\n{participant}')
+        return participants

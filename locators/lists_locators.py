@@ -29,3 +29,10 @@ no_image_notification = '//div[text()="Для участника не загру
 modal_with_image = 'div.ant-modal-body img'
 button_is_disable = '//button[@disabled="true"]//span[text()="Просмотр изображения"]'
 modal_close_button = '.ant-modal-close-x'
+
+# Загрузка участников
+load_button = '.anticon-folder-open'
+load_participant_file = os.getcwd() + r'\data\АРМ «ЭЛЕКТРОННЫЕ ТАБЛИЧКИ» Списки участников.csv'
+
+# Таблица с участниками
+line_to_participant = 'tbody .ant-table-row'
