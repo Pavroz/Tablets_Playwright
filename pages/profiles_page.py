@@ -22,7 +22,7 @@ class ProfilesPage(BasePage):
 
     def get_all_carts_titles(self):
         """Получение списка с названиями карточек"""
-        carts = self.get_all_carts() # Теперь carts — List[Locator]
+        carts = self.get_all_carts() # List[Locator]
         titles = []
         for cart in carts:
             try:
@@ -84,14 +84,20 @@ class ProfilesPage(BasePage):
 
     def create_existing_profile(self, name_profile):
         """Создает существующий профиль"""
-        with allure.step('Создание существующего профиля профиля'):
-            if name_profile in self.get_all_carts_titles():
-                # print(f'Профиль "{name}" уже существует')
-                self.page.locator(loc.create_profile_button).click()
-                self.page.locator(loc.name_field).fill(name_profile)
-                with allure.step(f'Проверка, что кнопка создания заблокирована'):
-                    expect(self.page.locator(loc.apply_modals_button)).to_be_disabled()
-                self.page.locator(loc.cancel_modals_button).click()
+        with allure.step('Создание существующего профиля'):
+            # ждём, пока кнопка создания станет доступной
+            create_button = self.page.locator(loc.create_profile_button)
+            expect(create_button).to_be_visible()
+            create_button.click()
+            # ждём появления модалки
+            name_input = self.page.locator(loc.name_field)
+            expect(name_input).to_be_visible()
+            name_input.fill(name_profile)
+            # ждём, пока кнопка Apply станет disabled
+            apply_button = self.page.locator(loc.apply_modals_button)
+            expect(apply_button).to_be_disabled()
+            # закрываем модалку
+            self.page.locator(loc.cancel_modals_button).click()
 
     def delete_profile(self, name_profile):
         """Удаляет профиль по имени"""

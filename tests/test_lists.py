@@ -1,9 +1,28 @@
 import allure
 import pytest
-from time import sleep
+
 
 @allure.feature('Страница списка участников')
 class TestLists:
+
+    @pytest.fixture(scope='function')
+    def prepare_profile_and_open_lists(self, auth, profiles_page, configuration_page, lists_page):
+        """
+        Создание профиля,
+        переход в созданный профиль,
+        переход на страницу списка участников,
+        переход на страницу профилей,
+        удаление профиля
+        """
+        name = None
+        try:
+            name = profiles_page.create_profile()
+            profiles_page.go_to_profile(name)
+            configuration_page.go_to_lists_page()
+            yield
+        finally:
+            lists_page.go_to_back()
+            profiles_page.delete_profile(name)
 
     @allure.story('Позитивные сценарии')
     @allure.title('Проверка создания участника')
@@ -43,13 +62,9 @@ class TestLists:
     #     ]
     # )
     def test_created_participant(
-            self, auth, profiles_page, lists_page, configuration_page,
+            self, prepare_profile_and_open_lists, lists_page,
             middlename, subject, position, image
     ):
-        name = profiles_page.create_profile()
-        profiles_page.go_to_profile(name)
-        configuration_page.go_to_lists_page()
-
         # Передаём параметры в метод
         lists_page.create_participant(
             middlename=middlename,
@@ -58,20 +73,12 @@ class TestLists:
             image=image
         )
 
-        lists_page.go_to_back()
-        profiles_page.delete_profile(name)
-
     @allure.story('Позитивные сценарии')
     @allure.title('Проверка редактирования участника')
     @pytest.mark.lists
-    def test_update_participant(self, auth, profiles_page, lists_page, configuration_page):
-        name = profiles_page.create_profile()
-        profiles_page.go_to_profile(name)
-        configuration_page.go_to_lists_page()
+    def test_update_participant(self, prepare_profile_and_open_lists, lists_page):
         name_participant = lists_page.create_participant()
         lists_page.update_participant(name_participant)
-        lists_page.go_to_back()
-        profiles_page.delete_profile(name)
         ## Вариант с try - finally, чтобы профиль всегда удалялся
         # name = None
         # try:
@@ -91,15 +98,13 @@ class TestLists:
     @allure.story('Позитивные сценарии')
     @allure.title('Проверка удаления участника')
     @pytest.mark.lists
-    def test_delete_participant(self, auth, profiles_page, lists_page, configuration_page):
-        name = profiles_page.create_profile()
-        profiles_page.go_to_profile(name)
-        configuration_page.go_to_lists_page()
+    def test_delete_participant(self, prepare_profile_and_open_lists, lists_page):
         name_participant = lists_page.create_participant()
         lists_page.delete_participant(name_participant)
-        lists_page.go_to_back()
-        profiles_page.delete_profile(name)
 
+    @allure.story('Позитивные сценарии')
+    @allure.title('Проврка добавленного изображения')
+    @pytest.mark.lists
     @pytest.mark.parametrize(
         "middlename, subject, position, image",
         [
@@ -107,11 +112,8 @@ class TestLists:
             ("middlename", "subject", "position", "image"),
         ]
     )
-    def test_view_added_image(self, auth, profiles_page, lists_page, configuration_page,
+    def test_view_added_image(self, prepare_profile_and_open_lists, lists_page,
                               middlename, subject, position, image):
-        name = profiles_page.create_profile()
-        profiles_page.go_to_profile(name)
-        configuration_page.go_to_lists_page()
         name_participant = lists_page.create_participant(
             middlename=middlename,
             subject=subject,
@@ -119,24 +121,16 @@ class TestLists:
             image=image
         )
         lists_page.view_added_image(name_participant)
-        lists_page.go_to_back()
-        profiles_page.delete_profile(name)
 
-    def test_load_participant(self, auth, profiles_page, lists_page, configuration_page):
-        name = profiles_page.create_profile()
-        profiles_page.go_to_profile(name)
-        configuration_page.go_to_lists_page()
-        sleep(2)
+    @allure.story('Позитивные сценарии')
+    @allure.title('Проверка загрузки участников из csv файла')
+    @pytest.mark.lists
+    def test_load_participant(self, prepare_profile_and_open_lists, lists_page):
         lists_page.load_participant()
-        sleep(3)
-        lists_page.go_to_back()
-        profiles_page.delete_profile(name)
 
-    def test_get_all_participant(self, auth, profiles_page, lists_page, configuration_page):
-        name = profiles_page.create_profile()
-        profiles_page.go_to_profile(name)
-        configuration_page.go_to_lists_page()
+    @allure.story('Позитивные сценарии')
+    @allure.title('Получение всего списка участников')
+    @pytest.mark.lists
+    def test_get_all_participant(self, prepare_profile_and_open_lists, lists_page):
         lists_page.load_participant()
         lists_page.get_all_participant()
-        lists_page.go_to_back()
-        profiles_page.delete_profile(name)
