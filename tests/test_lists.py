@@ -103,7 +103,7 @@ class TestLists:
         lists_page.delete_participant(name_participant)
 
     @allure.story('Позитивные сценарии')
-    @allure.title('Проврка добавленного изображения')
+    @allure.title('Проверка добавленного изображения')
     @pytest.mark.lists
     @pytest.mark.parametrize(
         "middlename, subject, position, image",

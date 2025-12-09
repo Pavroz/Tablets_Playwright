@@ -85,10 +85,16 @@ class TestProfiles:
     def test_create_an_empty_profile(self, auth, profiles_page):
         profiles_page.create_an_empty_profile()
 
+    @allure.story('Позитивные сценарии')
+    @allure.title('Проверка активации профиля')
+    @pytest.mark.profiles
     def test_activate_profile(self, auth, profiles_page, prepare_profile):
         name = prepare_profile
         profiles_page.activate_profile(name)
 
+    @allure.story('Позитивные сценарии')
+    @allure.title('Проверка деактивации профиля')
+    @pytest.mark.profiles
     def test_deactivate_profile(self, auth, profiles_page, prepare_profile):
         name = prepare_profile
         profiles_page.activate_profile(name)

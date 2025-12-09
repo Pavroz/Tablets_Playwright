@@ -36,6 +36,9 @@ class TestConfiguration:
         configuration_page.choice_scheme(name_scheme)
         configuration_page.apply_scheme()
 
+    @allure.story('Позитивные сценарии')
+    @allure.title('Проверка редактирования названия схемы')
+    @pytest.mark.configuration
     def test_edit_scheme(self, prepare_profile, configuration_page):
         name = configuration_page.create_scheme()
         configuration_page.edit_scheme(name)
