@@ -249,8 +249,6 @@ class ProfilesPage(BasePage):
         self.page.locator(loc.create_profile_button).click()
         name_field = self.page.locator(loc.name_field)
         name_field.fill(name)
-        apply_button = self.page.locator(loc.apply_modals_button)
-        # assert apply_button.get_attribute('disabled') == 'true'
         expect(self.page.locator(loc.apply_modals_button)).to_be_disabled()
 
     def create_an_empty_profile(self):

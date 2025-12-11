@@ -1,3 +1,5 @@
+from time import sleep
+
 import allure
 import pytest
 
@@ -42,3 +44,19 @@ class TestConfiguration:
     def test_edit_scheme(self, prepare_profile, configuration_page):
         name = configuration_page.create_scheme()
         configuration_page.edit_scheme(name)
+
+
+
+    @allure.story('Негативные сценарии')
+    @allure.title('Проверка максимального количества символов в названии схемы')
+    @pytest.mark.configuration
+    def test_create_max_number_of_characters_scheme(self, prepare_profile, configuration_page):
+        configuration_page.create_max_number_of_characters_scheme()
+
+    def test_delete_scheme(self, prepare_profile, configuration_page):
+        name1 = configuration_page.create_scheme()
+        name2 = configuration_page.create_scheme()
+        name = configuration_page.create_scheme()
+        name3 = configuration_page.create_scheme()
+        configuration_page.delete_scheme(name)
+        sleep(10)

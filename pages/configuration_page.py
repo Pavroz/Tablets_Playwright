@@ -1,7 +1,7 @@
 from locators.configuration_locators import create_scheme_button
 from pages.base_page import BasePage
 from locators import configuration_locators as loc
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 from time import sleep
 import allure
 import random
@@ -58,7 +58,13 @@ class ConfigurationPage(BasePage):
 
 
     def delete_scheme(self, name_scheme):
-        pass
+        self.page.locator(loc.delete_scheme_button).click()
+        self.page.wait_for_selector('nz-modal-confirm-container')
+        self.page.locator(loc.yes_scheme_button).click()
+        self.page.locator(loc.schemes_selector).click()
+        self.page.locator(loc.schemes_dropdown).wait_for(state="visible")
+        # Проверка, что элемент не существует вообще
+        expect(self.page.locator(loc.schemes_in_dropdown, has_text=name_scheme)).to_have_count(0)
 
     def copy_scheme(self, name_scheme):
         pass
@@ -68,3 +74,23 @@ class ConfigurationPage(BasePage):
 
     def download_scheme(self, name_scheme):
         pass
+
+    def create_max_number_of_characters_scheme(self, quantity=256):
+        """Создание схемы с максимальным количеством символов в названии"""
+        name = ''.join(random.choice(string.ascii_lowercase + string.digits)
+                       for _ in range(quantity))
+        self.page.locator(loc.create_scheme_button).click()
+        self.page.wait_for_selector('nz-modal-container')
+        self.page.locator(loc.name_field).fill(name)
+        # Ловим открытие file chooser
+        with self.page.expect_file_chooser() as fc_info:
+            self.page.get_by_role(
+                'button',
+                name='Загрузите схему зала в формате .svg (до 2 МБ)'
+            ).click()
+        # когда file chooser открыт — передаём файл
+        file_chooser = fc_info.value
+        file_chooser.set_files(loc.scheme_path)
+        expect(self.page.locator(loc.create_button)).to_be_disabled()
+        self.page.locator(loc.cancel_button).click()
+        return name
