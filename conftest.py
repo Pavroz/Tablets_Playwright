@@ -47,7 +47,3 @@ def auth(auth_page):
     auth_page.auth_correct_login_and_password(test_data.login, test_data.password)
     yield auth_page  # возвращаем драйвер (или страницу)
 
-@pytest.fixture()
-def open(auth_page):
-    auth_page.open()
-    yield auth_page

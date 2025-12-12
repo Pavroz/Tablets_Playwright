@@ -16,6 +16,7 @@ class ListsPage(BasePage):
 
     @staticmethod
     def generate_random(prefix='Test_', length = 20):
+        """Генерация случайного значения"""
         suffix = ''.join(random.choice(string.ascii_lowercase)
                          for _ in range(length))
         return f'{prefix}{suffix}'
@@ -102,6 +103,7 @@ class ListsPage(BasePage):
         return None
 
     def view_added_image(self, lastname):
+        """Просмотр добавленного изображения (три варианта)"""
         line_to_participant = self.page.locator(f'//*[text()="{lastname}"]').first
         line_to_participant.click()
         self.page.locator(loc.view_image_button).click()
@@ -138,6 +140,7 @@ class ListsPage(BasePage):
 
 
     def load_participant(self):
+        """Загрузка участников из файла"""
         with self.page.expect_file_chooser() as fc_info:
             self.page.locator(loc.load_button).click()
         file_chooser = fc_info.value

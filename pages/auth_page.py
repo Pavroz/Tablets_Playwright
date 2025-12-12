@@ -13,6 +13,7 @@ class AuthPage(BasePage):
         super().__init__(page)
 
     def auth_correct_login_and_password(self, login, password):
+        """Авторизация с корректным логином и паролем"""
         with allure.step(f'Ввод логина "{login}"'):
             self.page.locator(loc.login).fill(login)
         with allure.step(f'Ввод пароля "{password}"'):
@@ -28,6 +29,7 @@ class AuthPage(BasePage):
 
 
     def auth_incorrect_login(self, login, password):
+        """Авторизация с некорректным логином"""
         with allure.step(f'Ввод логина "{login}"'):
             self.page.locator(loc.login).fill(login)
         with allure.step(f'Ввод пароля "{password}"'):
@@ -39,6 +41,7 @@ class AuthPage(BasePage):
             assert notification_text == f"Не удалось авторизоваться: \"Пользователь с логином '{login}' не найден\""
 
     def auth_incorrect_password(self, login, password):
+        """Авторизация с некорректным паролем"""
         with allure.step(f'Ввод логина "{login}"'):
             self.page.locator(loc.login).fill(login)
         with allure.step(f'Ввод пароля "{password}"'):
@@ -51,6 +54,7 @@ class AuthPage(BasePage):
 
 
     def auth_active_recovery_conf(self, login, password):
+        """Авторизация с активным восстановлением конфигурации"""
         with allure.step(f'Ввод логина "{login}"'):
             self.page.locator(loc.login).fill(login)
         with allure.step(f'Ввод пароля "{password}"'):
@@ -63,6 +67,7 @@ class AuthPage(BasePage):
             self.page.locator(loc.auth_button).click()
 
     def auth_inactive_recovery_conf(self, login, password):
+        """Авторизация с неактивным восстановлением конфигурации"""
         with allure.step(f'Ввод логина "{login}"'):
             self.page.locator(loc.login).fill(login)
         with allure.step(f'Ввод пароля "{password}"'):

@@ -11,11 +11,13 @@ class BasePage:
         self.page = page
 
     def open(self):
+        """Открытие браузера"""
         if self.page_url:
             self.page.goto(f'{self.base_url}{self.page_url}')
         else:
             self.page.goto(self.base_url)
 
     def go_to_back(self):
+        """Возвращение на страницу списка профилей"""
         back_button = 'nz-page-header i[nztype="left"]'
         self.page.locator(back_button).click()

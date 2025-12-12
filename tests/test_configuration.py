@@ -54,9 +54,25 @@ class TestConfiguration:
         configuration_page.create_max_number_of_characters_scheme()
 
     def test_delete_scheme(self, prepare_profile, configuration_page):
-        name1 = configuration_page.create_scheme()
-        name2 = configuration_page.create_scheme()
         name = configuration_page.create_scheme()
-        name3 = configuration_page.create_scheme()
         configuration_page.delete_scheme(name)
-        sleep(10)
+
+    def test_copy_scheme(self, prepare_profile, configuration_page):
+        name = configuration_page.create_scheme()
+        configuration_page.copy_scheme(name)
+
+    def test_load_new_scheme(self, prepare_profile, configuration_page):
+        name = configuration_page.create_scheme()
+        configuration_page.load_new_scheme(name)
+
+    def test_download_scheme(self, prepare_profile, configuration_page):
+        name = configuration_page.create_scheme()
+        configuration_page.download_scheme(name)
+
+    # Запуск теста - pytest -v -s -m repeat --count=5 -n 5
+    @pytest.mark.repeat(5)  # повторить 5 раз
+    def test_create_place(self, prepare_profile, configuration_page):
+        name = configuration_page.create_scheme()
+        configuration_page.create_place(name)
+        sleep(1)
+
