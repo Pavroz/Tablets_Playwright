@@ -45,32 +45,45 @@ class TestConfiguration:
         name = configuration_page.create_scheme()
         configuration_page.edit_scheme(name)
 
-
-
     @allure.story('Негативные сценарии')
     @allure.title('Проверка максимального количества символов в названии схемы')
     @pytest.mark.configuration
     def test_create_max_number_of_characters_scheme(self, prepare_profile, configuration_page):
         configuration_page.create_max_number_of_characters_scheme()
 
+    @allure.story('Позитивные сценарии')
+    @allure.title('Проверка')
+    @pytest.mark.configuration
     def test_delete_scheme(self, prepare_profile, configuration_page):
         name = configuration_page.create_scheme()
         configuration_page.delete_scheme(name)
 
+    @allure.story('Позитивные сценарии')
+    @allure.title('Проверка')
+    @pytest.mark.configuration
     def test_copy_scheme(self, prepare_profile, configuration_page):
         name = configuration_page.create_scheme()
         configuration_page.copy_scheme(name)
 
+    @allure.story('Позитивные сценарии')
+    @allure.title('Проверка')
+    @pytest.mark.configuration
     def test_load_new_scheme(self, prepare_profile, configuration_page):
         name = configuration_page.create_scheme()
         configuration_page.load_new_scheme(name)
 
+    @allure.story('Позитивные сценарии')
+    @allure.title('Проверка')
+    @pytest.mark.configuration
     def test_download_scheme(self, prepare_profile, configuration_page):
         name = configuration_page.create_scheme()
         configuration_page.download_scheme(name)
 
     # Запуск теста - pytest -v -s -m repeat --count=5 -n 5
-    @pytest.mark.repeat(5)  # повторить 5 раз
+    # @pytest.mark.repeat(5)  # повторить 5 раз
+    @allure.story('Позитивные сценарии')
+    @allure.title('Проверка')
+    @pytest.mark.configuration
     def test_create_place(self, prepare_profile, configuration_page):
         name = configuration_page.create_scheme()
         configuration_page.create_place(name)
