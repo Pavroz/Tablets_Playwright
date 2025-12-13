@@ -17,8 +17,7 @@ class TestProfiles:
             name = profiles_page.create_profile()
             yield name
         finally:
-            pass
-            # profiles_page.delete_profile(name)
+            profiles_page.delete_profile(name)
 
     @allure.story('Позитивные сценарии')
     @allure.title('Проверка создания профиля')
