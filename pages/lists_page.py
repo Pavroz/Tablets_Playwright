@@ -167,3 +167,29 @@ class ListsPage(BasePage):
             participants.append(participant)
             print(f'\n{participant}')
         return participants
+
+    def pagination_page(self):
+        pagination = self.page.locator(loc.pagination_button).all()
+        for page in pagination:
+            page.click()
+
+    def switch_by_page(self, value: int):
+        # Открываем dropdown
+        self.page.locator(loc.dropdown_page_button).click()
+        # Формируем селектор для нужного элемента
+        item_locator = f'//div[text()="{value} / стр."]'
+        # Дожидаемся, что элемент видим и стабильный
+        self.page.locator(item_locator).first.wait_for(state="visible")
+        self.page.locator(item_locator).first.click()
+
+    def switch_by_10_page(self):
+        self.switch_by_page(10)
+
+    def switch_by_20_page(self):
+        self.switch_by_page(20)
+
+    def switch_by_50_page(self):
+        self.switch_by_page(50)
+
+    def switch_by_100_page(self):
+        self.switch_by_page(100)

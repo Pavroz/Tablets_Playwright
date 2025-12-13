@@ -36,3 +36,13 @@ load_participant_file = os.getcwd() + r'\data\АРМ «ЭЛЕКТРОННЫЕ Т
 
 # Таблица с участниками
 line_to_participant = 'tbody .ant-table-row'
+
+# Пагинация
+pagination_button = '.ant-pagination-item'
+prev_page_button = '.ant-pagination-prev'
+next_page_button = 'ant-pagination-next'
+dropdown_page_button = '.ant-select-selection-item'
+page_10_item = 'nz-option-item[title="10 / стр."]'
+page_20_item = 'nz-option-item[title="20 / стр."]'
+page_50_item = '//div[text()="50 / стр."]'
+page_100_item = '//div[text()="100 / стр."]'

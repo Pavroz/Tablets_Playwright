@@ -1,3 +1,5 @@
+from time import sleep
+
 import allure
 import pytest
 
@@ -129,8 +131,49 @@ class TestLists:
         lists_page.load_participant()
 
     @allure.story('Позитивные сценарии')
-    @allure.title('Получение всего списка участников')
+    @allure.title('Проверка получения всего списка участников')
     @pytest.mark.lists
     def test_get_all_participant(self, prepare_profile_and_open_lists, lists_page):
         lists_page.load_participant()
         lists_page.get_all_participant()
+
+    @allure.story('Позитивные проверки')
+    @allure.title('Проверка переключения страниц')
+    @pytest.mark.lists
+    def test_pagination_page(self, prepare_profile_and_open_lists, lists_page):
+        lists_page.load_participant()
+        lists_page.switch_by_10_page()
+        lists_page.pagination_page()
+
+    @allure.story('Позитивные проверки')
+    @allure.title('Проверка переключения отображения на 10 строк')
+    @pytest.mark.lists
+    def test_switch_by_10_page(self, prepare_profile_and_open_lists, lists_page):
+        lists_page.load_participant()
+        lists_page.switch_by_10_page()
+        lists_page.pagination_page()
+
+    @allure.story('Позитивные проверки')
+    @allure.title('Проверка переключения отображения на 20 строк')
+    @pytest.mark.lists
+    def test_switch_by_20_page(self, prepare_profile_and_open_lists, lists_page):
+        lists_page.load_participant()
+        lists_page.switch_by_10_page()
+        lists_page.switch_by_20_page()
+        lists_page.pagination_page()
+
+    @allure.story('Позитивные проверки')
+    @allure.title('Проверка переключения отображения на 50 строк')
+    @pytest.mark.lists
+    def test_switch_by_50_page(self, prepare_profile_and_open_lists, lists_page):
+        lists_page.load_participant()
+        lists_page.switch_by_50_page()
+        lists_page.pagination_page()
+
+    @allure.story('Позитивные проверки')
+    @allure.title('Проверка переключения отображения на 100 строк')
+    @pytest.mark.lists
+    def test_switch_by_100_page(self, prepare_profile_and_open_lists, lists_page):
+        lists_page.load_participant()
+        lists_page.switch_by_100_page()
+        lists_page.pagination_page()
