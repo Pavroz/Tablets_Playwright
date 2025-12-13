@@ -173,7 +173,8 @@ class ListsPage(BasePage):
         for page in pagination:
             page.click()
 
-    def switch_by_page(self, value: int):
+    # Проба реализации инкапсуляции через __ у метода
+    def __switch_by_page(self, value: int):
         # Открываем dropdown
         self.page.locator(loc.dropdown_page_button).click()
         # Формируем селектор для нужного элемента
@@ -183,13 +184,13 @@ class ListsPage(BasePage):
         self.page.locator(item_locator).first.click()
 
     def switch_by_10_page(self):
-        self.switch_by_page(10)
+        self.__switch_by_page(10)
 
     def switch_by_20_page(self):
-        self.switch_by_page(20)
+        self.__switch_by_page(20)
 
     def switch_by_50_page(self):
-        self.switch_by_page(50)
+        self.__switch_by_page(50)
 
     def switch_by_100_page(self):
-        self.switch_by_page(100)
+        self.__switch_by_page(100)
