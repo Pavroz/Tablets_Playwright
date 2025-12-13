@@ -14,10 +14,27 @@ class ProfilesPage(BasePage):
     def __init__(self, page):
         super().__init__(page)
 
+    def delete_profiles_with_name_test(self):
+        """Метод для удаления всех профилей с названием test, если вдруг профили начнут скапливаться"""
+        while True:
+            # Получаем первую карточку, имя которой начинается с 'test'
+            test_card = self.page.locator('.profile-card__title span[nz-typography]', has_text='test').first
+            # Если карточек нет, то цикл останавливается
+            if test_card.count() == 0:
+                break
+            # Получение текста карточки и удаление
+            title = test_card.inner_text()
+            self.delete_profile(title)
+            # Ждем, пока эта карточка реально исчезнет из DOM
+            expect(self.page.locator('.profile-card__title span[nz-typography]', has_text=title)).to_have_count(0)
+            # Финальная проверка: больше нет профилей с 'test'
+        expect(self.page.locator('.profile-card__title span[nz-typography]', has_text='test')).to_have_count(0)
+
 
     def get_all_carts(self):
         """Получение списка карточек для дальнейшего взаимодействия с ними (например нажатие)"""
-        return self.page.locator(loc.all_carts).all() # ← .all() делает список
+        # return self.page.locator(loc.all_carts)
+        return self.page.locator(loc.all_carts).all() # ← .all() делает статичный список
 
 
     def get_all_carts_titles(self):
@@ -87,7 +104,6 @@ class ProfilesPage(BasePage):
                     delete_button = self.page.locator(
                          f'//*[text()="{name_profile}"]//ancestor::prominform-profile-card//span[@nztype="delete"]'
                     )
-                    # self.driver.execute_script('arguments[0].scrollIntoView();', delete_button)
                     delete_button.click()
                     break  # Если клик прошел, выходим из цикла
                 except:
@@ -109,7 +125,6 @@ class ProfilesPage(BasePage):
             edit_button = self.page.locator(
                  f'//*[text()="{name_profile}"]//ancestor::prominform-profile-card//span[@nztype="edit"]'
             )
-            # self.driver.execute_script('arguments[0].scrollIntoView();', edit_button)
             edit_button.click()
         with allure.step('Очистка и заполнение поля ввода "Наименование"'):
             name_field = self.page.locator(loc.name_field)
@@ -131,7 +146,6 @@ class ProfilesPage(BasePage):
             edit_button = self.page.locator(
                  f'//*[text()="{name_profile}"]//ancestor::prominform-profile-card//span[@nztype="edit"]'
             )
-            # self.driver.execute_script('arguments[0].scrollIntoView();', edit_button)
             edit_button.click()
         with allure.step('Очистка и заполнение поля ввода "Описание профиля"'):
             description_field = self.page.locator(loc.description_field)
@@ -149,7 +163,6 @@ class ProfilesPage(BasePage):
                     edit_button = self.page.locator(
                          f'//*[text()="{name_profile}"]//ancestor::prominform-profile-card//span[@nztype="edit"]'
                     )
-                    # self.driver.execute_script('arguments[0].scrollIntoView();', edit_button)
                     edit_button.click()
                     break
                 except:
@@ -170,7 +183,6 @@ class ProfilesPage(BasePage):
             edit_button = self.page.locator(
                  f'//*[text()="{name_profile}"]//ancestor::prominform-profile-card//span[@nztype="edit"]'
             )
-            # self.driver.execute_script('arguments[0].scrollIntoView();', edit_button)
             edit_button.click()
         with allure.step('Очистка и заполнение полей ввода "Наименование" и "Описание профиля"'):
             name_field = self.page.locator(loc.name_field)
@@ -214,7 +226,6 @@ class ProfilesPage(BasePage):
         copy_button = self.page.locator(
              f'//*[text()="{name_profile}"]//ancestor::prominform-profile-card//span[@nztype="copy"]'
         )
-        # self.driver.execute_script('arguments[0].scrollIntoView();', copy_button)
         copy_button.click()
         name_field = self.page.locator(loc.name_field)
         name_field.clear()
@@ -245,7 +256,6 @@ class ProfilesPage(BasePage):
         go_to_profile_button = self.page.locator(
              f'//*[text()="{name_profile}"]//ancestor::prominform-profile-card//div[@class="ant-card-body"]'
         )
-        # self.driver.execute_script('arguments[0].scrollIntoView();', go_to_profile_button)
         go_to_profile_button.click()
 
     def activate_profile(self, name_profile):

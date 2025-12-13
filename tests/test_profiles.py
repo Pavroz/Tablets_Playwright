@@ -2,6 +2,7 @@ from time import sleep
 
 import allure
 import pytest
+from playwright.sync_api import expect
 
 
 # ТЕСТЫ ПАРАЛЛЕЛИТЬ ТОЛЬКО НА ДВА ОКНА
@@ -16,7 +17,8 @@ class TestProfiles:
             name = profiles_page.create_profile()
             yield name
         finally:
-            profiles_page.delete_profile(name)
+            pass
+            # profiles_page.delete_profile(name)
 
     @allure.story('Позитивные сценарии')
     @allure.title('Проверка создания профиля')
@@ -101,3 +103,7 @@ class TestProfiles:
         name = prepare_profile
         profiles_page.activate_profile(name)
         profiles_page.deactivate_profile(name)
+
+    def test_delete_profiles_with_name_test(self, auth, profiles_page):
+        """Удаление всех профилей с наименованием test"""
+        profiles_page.delete_profiles_with_name_test()
