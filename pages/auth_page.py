@@ -2,9 +2,8 @@ import re
 from time import sleep
 from pages.base_page import BasePage
 from locators import auth_locators as loc
-from locators import profiles_locators as locp
 import allure
-from playwright.sync_api import expect, Page
+from playwright.sync_api import expect
 
 class AuthPage(BasePage):
     page_url = '/auth'

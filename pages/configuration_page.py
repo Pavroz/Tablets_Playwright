@@ -1,8 +1,7 @@
 from pages.base_page import BasePage
 from locators import configuration_locators as loc
-from playwright.sync_api import Page, expect
+from playwright.sync_api import expect
 from time import sleep
-import allure
 import random
 import string
 

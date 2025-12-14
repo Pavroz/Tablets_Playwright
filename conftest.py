@@ -10,12 +10,12 @@ from data import test_data
 @pytest.fixture(scope="function")
 def page():
     with sync_playwright() as p:
-        browser = p.chromium.launch(
+        browser: Browser = p.chromium.launch(
             channel='chrome',
             headless=False,
             args=['--start-maximized', '--disable-cache', '--incognito']
         )
-        context = browser.new_context(no_viewport=True)
+        context: BrowserContext = browser.new_context(no_viewport=True)
         page = context.new_page()
         yield page
         context.close()

@@ -6,7 +6,7 @@ from time import sleep
 import allure
 import random
 import string
-from playwright.sync_api import expect, Page
+from playwright.sync_api import expect
 
 class ProfilesPage(BasePage):
     page_url = '/profiles'
