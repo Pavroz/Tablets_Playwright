@@ -38,7 +38,7 @@ class ConfigurationPage(BasePage):
         # когда file chooser открыт — передаём файл
         file_chooser = fc_info.value
         file_chooser.set_files(loc.scheme_path)
-        self.page.locator(loc.create_button).click()
+        self.page.locator(loc.create_button).click(timeout=10000)
         return name
 
     def choice_scheme(self, name_scheme: str):
@@ -61,7 +61,7 @@ class ConfigurationPage(BasePage):
         self.choice_scheme(name_scheme)
         self.page.locator(loc.edit_scheme_button).click()
         self.page.locator(loc.name_field_in_edit_scheme).fill(new_name_scheme)
-        self.page.locator(loc.save_button_in_edit_scheme).click()
+        self.page.locator(loc.save_button_in_edit_scheme).click(timeout=10000)
 
     def delete_scheme(self, name_scheme: str):
         """Выбор схемы в списке и удаление"""
@@ -87,7 +87,7 @@ class ConfigurationPage(BasePage):
         self.page.locator(loc.name_field_in_copy_scheme).fill(new_name_scheme)
         self.page.locator(loc.copy_button).click()
         # Проверка, что схема появилась в списке схем
-        self.page.locator(loc.schemes_selector).click()
+        self.page.locator(loc.schemes_selector).click(timeout=10000)
         self.page.locator(loc.schemes_dropdown).wait_for(state='visible')
         expect(self.page.locator(loc.schemes_in_dropdown, has_text=name_scheme)).to_be_visible()
 
@@ -122,9 +122,9 @@ class ConfigurationPage(BasePage):
 
     def create_max_number_of_characters_scheme(self, quantity=256) -> str:
         """Создание схемы с максимальным количеством символов в названии"""
-        # name = ''.join(random.choice(string.ascii_lowercase + string.digits)
-        #                for _ in range(quantity))
-        name = self.generate_scheme_name()
+        name = ''.join(random.choice(string.ascii_lowercase + string.digits)
+                       for _ in range(quantity))
+        # name = self.generate_scheme_name()
         self.page.locator(loc.create_scheme_button).click()
         self.page.wait_for_selector('nz-modal-container')
         self.page.locator(loc.name_field).fill(name)

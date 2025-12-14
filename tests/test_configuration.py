@@ -51,6 +51,7 @@ class TestConfiguration:
     def test_create_max_number_of_characters_scheme(self, prepare_profile, configuration_page):
         configuration_page.create_max_number_of_characters_scheme()
 
+
     @allure.story('Позитивные сценарии')
     @allure.title('Проверка')
     @pytest.mark.configuration
