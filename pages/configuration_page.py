@@ -154,12 +154,14 @@ class ConfigurationPage(BasePage):
 
         scheme = self.page.locator(loc.scheme)
         scheme.wait_for(state="visible")  # безопаснее перед кликом
-        # размеры схемы известны
-        width = 800
-        height = 443
-
-        x = random.randint(0, width - 1)
-        y = random.randint(0, height - 1)
+        # # размеры схемы известны
+        # width = 800
+        # height = 443
+        # x = random.randint(0, width - 1)
+        # y = random.randint(0, height - 1)
+        box = scheme.bounding_box()
+        x = random.randint(0, int(box["width"]))
+        y = random.randint(0, int(box["height"]))
         # клик в случайное место
         scheme.click(position={"x": x, "y": y})
 
