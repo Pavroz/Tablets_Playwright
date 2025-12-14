@@ -175,22 +175,13 @@ class ListsPage(BasePage):
 
     # Проба реализации инкапсуляции через __ у метода
     def __switch_by_page(self, value: int):
-        # Открываем dropdown
-        self.page.locator(loc.dropdown_page_button).click()
         # Формируем селектор для нужного элемента
         item_locator = f'//div[text()="{value} / стр."]'
+        # Открываем dropdown
+        self.page.locator(loc.dropdown_page_button).click()
         # Дожидаемся, что элемент видим и стабильный
         self.page.locator(item_locator).first.wait_for(state="visible")
         self.page.locator(item_locator).first.click()
 
-    def switch_by_10_page(self):
-        self.__switch_by_page(10)
-
-    def switch_by_20_page(self):
-        self.__switch_by_page(20)
-
-    def switch_by_50_page(self):
-        self.__switch_by_page(50)
-
-    def switch_by_100_page(self):
-        self.__switch_by_page(100)
+    def switch_by_10_page(self, value=None):
+        self.__switch_by_page(value)
