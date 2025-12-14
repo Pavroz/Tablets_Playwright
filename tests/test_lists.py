@@ -153,3 +153,7 @@ class TestLists:
         lists_page.load_participant()
         lists_page.switch_page(value=value)
         lists_page.pagination_page()
+
+    def test_search_participant_by_lastname(self, prepare_profile_and_open_lists, lists_page):
+        lastname = lists_page.create_participant()
+        lists_page.search_participant(lastname)

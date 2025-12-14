@@ -48,4 +48,4 @@ page_50_item = '//div[text()="50 / стр."]'
 page_100_item = '//div[text()="100 / стр."]'
 
 # Поиск
-search_field = '.ant-input-affix-wrapper'
+search_field = 'input[nzsize="large"]'

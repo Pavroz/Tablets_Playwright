@@ -1,3 +1,4 @@
+import re
 from typing import List, Dict
 
 from pages.base_page import BasePage
@@ -186,3 +187,10 @@ class ListsPage(BasePage):
 
     def switch_page(self, value=None):
         self.__switch_page(value)
+
+    def search_participant_by_lastname(self, lastname):
+            search_field = self.page.locator(loc.search_field)
+            search_field.fill(lastname)
+            search_field.press('Enter')
+            row = self.page.locator('tr', has=self.page.locator('td', has_text=lastname))
+            expect(row).to_have_class(re.compile('selected'))
