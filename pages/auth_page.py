@@ -11,7 +11,7 @@ class AuthPage(BasePage):
     def __init__(self, page):
         super().__init__(page)
 
-    def auth_correct_login_and_password(self, login, password):
+    def auth_correct_login_and_password(self, login, password) -> bool:
         """Авторизация с корректным логином и паролем"""
         with allure.step(f'Ввод логина "{login}"'):
             self.page.locator(loc.login).fill(login)
@@ -86,7 +86,7 @@ class AuthPage(BasePage):
         with allure.step('Нажатие на кнопку авторизации'):
             self.page.locator(loc.auth_button).click()
 
-    def auth_empty_fields(self):
+    def auth_empty_fields(self) -> bool:
         """Авторизация с пустым логином и паролем"""
         with allure.step('Нажатие кнопки авторизации'):
             self.page.locator(loc.auth_button).click()

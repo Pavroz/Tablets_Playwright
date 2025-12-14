@@ -12,7 +12,7 @@ class ConfigurationPage(BasePage):
         super().__init__(page)
 
     @staticmethod
-    def generate_scheme_name(prefix='Scheme_', length=15):
+    def generate_scheme_name(prefix='Scheme_', length=15) -> str:
         """Генерация имени для тестовой схемы"""
         suffix = ''.join(random.choice(string.ascii_lowercase + string.digits)
                          for _ in range(length - len(prefix)))
@@ -22,7 +22,7 @@ class ConfigurationPage(BasePage):
         """Переход на страницу списка участников"""
         self.page.locator(loc.lists_page).click()
 
-    def create_scheme(self):
+    def create_scheme(self) -> str:
         """Создание схемы"""
         # name = "Scheme_" + str(random.randint(1000, 9999))
         name = self.generate_scheme_name()
@@ -41,7 +41,7 @@ class ConfigurationPage(BasePage):
         self.page.locator(loc.create_button).click()
         return name
 
-    def choice_scheme(self, name_scheme):
+    def choice_scheme(self, name_scheme: str):
         """Выбор схемы в дропдауне"""
         self.page.locator(loc.schemes_selector).click()
         self.page.locator(loc.schemes_dropdown).wait_for(state='visible')
@@ -55,7 +55,7 @@ class ConfigurationPage(BasePage):
         # button.wait_for(state="enabled")
         button.click()
 
-    def edit_scheme(self, name_scheme):
+    def edit_scheme(self, name_scheme: str):
         # new_name_scheme = "Scheme_" + str(random.randint(1000, 9999))
         new_name_scheme = self.generate_scheme_name()
         self.choice_scheme(name_scheme)
@@ -63,7 +63,7 @@ class ConfigurationPage(BasePage):
         self.page.locator(loc.name_field_in_edit_scheme).fill(new_name_scheme)
         self.page.locator(loc.save_button_in_edit_scheme).click()
 
-    def delete_scheme(self, name_scheme):
+    def delete_scheme(self, name_scheme: str):
         """Выбор схемы в списке и удаление"""
         self.choice_scheme(name_scheme)
         # Удаление
@@ -76,7 +76,7 @@ class ConfigurationPage(BasePage):
         # Проверка, что элемент не существует вообще
         expect(self.page.locator(loc.schemes_in_dropdown, has_text=name_scheme)).to_have_count(0)
 
-    def copy_scheme(self, name_scheme):
+    def copy_scheme(self, name_scheme: str):
         """Выбор схемы в списке и копирование"""
         new_name_scheme = self.generate_scheme_name()
         # Выбор схемы
@@ -92,7 +92,7 @@ class ConfigurationPage(BasePage):
         expect(self.page.locator(loc.schemes_in_dropdown, has_text=name_scheme)).to_be_visible()
 
 
-    def load_new_scheme(self, name_scheme):
+    def load_new_scheme(self, name_scheme: str):
         """Выбор схемы в списке и загрузка новой схемы"""
         # Выбор схемы
         self.choice_scheme(name_scheme)
@@ -106,7 +106,7 @@ class ConfigurationPage(BasePage):
         expect(self.page.locator(loc.loader_on_button)).not_to_be_visible()
         # self.page.locator(loc.loader_on_button).wait_for(state='detached')
 
-    def download_scheme(self, name_scheme):
+    def download_scheme(self, name_scheme: str):
         """Выбор схемы в списке и скачивание"""
         self.choice_scheme(name_scheme)
         # Контекстный менеджер скаичвания файла
@@ -120,7 +120,7 @@ class ConfigurationPage(BasePage):
         print(download.page)
 
 
-    def create_max_number_of_characters_scheme(self, quantity=256):
+    def create_max_number_of_characters_scheme(self, quantity=256) -> str:
         """Создание схемы с максимальным количеством символов в названии"""
         # name = ''.join(random.choice(string.ascii_lowercase + string.digits)
         #                for _ in range(quantity))
@@ -141,7 +141,7 @@ class ConfigurationPage(BasePage):
         self.page.locator(loc.cancel_button).click()
         return name
 
-    def create_place(self, name_scheme):
+    def create_place(self, name_scheme: str):
         # Выбор схемы
         self.choice_scheme(name_scheme)
         self.page.locator(loc.edit_switch_off).click()

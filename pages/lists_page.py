@@ -63,7 +63,7 @@ class ListsPage(BasePage):
 
 
 
-    def update_participant(self, lastname):
+    def update_participant(self, lastname: str) -> str:
         """Поиск участника по имени, очистка полей и генерация новых значений"""
         with allure.step('Поиск созданного участника и нажатие на него'):
             line_to_participant = self.page.locator(f'//*[text()="{lastname}"]')
@@ -88,7 +88,7 @@ class ListsPage(BasePage):
             expect(new_lastname).to_have_text(generated_lastname)
         return new_lastname.inner_text()
 
-    def delete_participant(self, lastname):
+    def delete_participant(self, lastname: str):
         """Поиск участника по имении удаление"""
         with allure.step('Поиск созданного участника и нажатие на него'):
             line_to_participant = self.page.locator(f'//*[text()="{lastname}"]')
@@ -172,9 +172,10 @@ class ListsPage(BasePage):
         pagination = self.page.locator(loc.pagination_button).all()
         for page in pagination:
             page.click()
+            sleep(1)
 
     # Проба реализации инкапсуляции через __ у метода
-    def __switch_by_page(self, value: int):
+    def __switch_page(self, value: int):
         # Формируем селектор для нужного элемента
         item_locator = f'//div[text()="{value} / стр."]'
         # Открываем dropdown
@@ -183,5 +184,5 @@ class ListsPage(BasePage):
         self.page.locator(item_locator).first.wait_for(state="visible")
         self.page.locator(item_locator).first.click()
 
-    def switch_by_10_page(self, value=None):
-        self.__switch_by_page(value)
+    def switch_page(self, value=None):
+        self.__switch_page(value)

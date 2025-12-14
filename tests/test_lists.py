@@ -142,14 +142,14 @@ class TestLists:
     @pytest.mark.lists
     def test_pagination_page(self, prepare_profile_and_open_lists, lists_page):
         lists_page.load_participant()
-        lists_page.switch_by_10_page()
+        lists_page.switch_page(10)
         lists_page.pagination_page()
 
     @allure.story('Позитивные проверки')
     @allure.title('Проверка переключения отображения на 10 строк')
     @pytest.mark.lists
     @pytest.mark.parametrize('value', [10, 20, 50, 100])
-    def test_switch_by_10_page(self, prepare_profile_and_open_lists, lists_page, value):
+    def test_switch_page(self, prepare_profile_and_open_lists, lists_page, value):
         lists_page.load_participant()
-        lists_page.switch_by_10_page(value=value)
+        lists_page.switch_page(value=value)
         lists_page.pagination_page()

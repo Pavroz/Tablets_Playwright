@@ -1,4 +1,5 @@
 import re
+from typing import List
 
 from pages.base_page import BasePage
 from locators import profiles_locators as loc
@@ -37,7 +38,7 @@ class ProfilesPage(BasePage):
         return self.page.locator(loc.all_carts).all() # ← .all() делает статичный список
 
 
-    def get_all_carts_titles(self):
+    def get_all_carts_titles(self) -> List[str]:
         """Получение списка с названиями карточек"""
         carts = self.get_all_carts() # List[Locator]
         titles = []
@@ -50,20 +51,20 @@ class ProfilesPage(BasePage):
         return titles
 
     @staticmethod
-    def generate_profile_name(prefix='test_', length = 20):
+    def generate_profile_name(prefix='test_', length = 20) -> str:
         """Генерация имени для тестового профиля"""
         suffix = ''.join(random.choice(string.ascii_lowercase + string.digits)
                          for _ in range(length - len(prefix)))
         return f'{prefix}{suffix}'
 
     @staticmethod
-    def generate_profile_description(prefix='TEST_', length = 50):
+    def generate_profile_description(prefix='TEST_', length = 50) -> str:
         """Генерация описания для тестового профиля"""
         suffix = ''.join(random.choice(string.ascii_lowercase + string.digits)
                          for _ in range(length - len(prefix)))
         return f'{prefix}{suffix}'
 
-    def create_profile(self, description=None):
+    def create_profile(self, description=None) -> str:
         """Создание профиля"""
         name = self.generate_profile_name()
         # Убираем проверку на существование — генерация и так даёт уникальные имена
@@ -77,7 +78,7 @@ class ProfilesPage(BasePage):
         expect(self.page.get_by_text(name, exact=True)).to_be_visible()
         return name
 
-    def create_existing_profile(self, name_profile):
+    def create_existing_profile(self, name_profile: str):
         """Создание существующий профиль"""
         with allure.step('Создание существующего профиля'):
             # ждём, пока кнопка создания станет доступной
@@ -94,7 +95,7 @@ class ProfilesPage(BasePage):
             # закрываем модалку
             self.page.locator(loc.cancel_modals_button).click()
 
-    def delete_profile(self, name_profile):
+    def delete_profile(self, name_profile: str):
         """Удаляет профиль по имени"""
         # Находим и кликаем кнопку удаления для профиля с нужным именем
         with allure.step('Нажатие на кнопку удаления'):
@@ -117,7 +118,7 @@ class ProfilesPage(BasePage):
                 assert self.page.locator(f'//*[text()="{name_profile}"]')
 
 
-    def edit_name_profile(self, name_profile):
+    def edit_name_profile(self, name_profile: str) -> str:
         """Редактирование наименования профиля"""
         new_name_profile = self.generate_profile_name()
         # Поиск кнопки редактирования
@@ -137,7 +138,7 @@ class ProfilesPage(BasePage):
             assert self.page.locator(f'//*[text()="{new_name_profile}"]')
         return new_name_profile
 
-    def edit_description_profile(self, name_profile):
+    def edit_description_profile(self, name_profile: str) -> str:
         """Редактирование описания профиля"""
         new_description_profile = self.generate_profile_description()
         # sleep(1)
@@ -175,7 +176,7 @@ class ProfilesPage(BasePage):
             self.page.locator(loc.cancel_modals_button).click()
         return new_description_profile
 
-    def edit_full_profile(self, name_profile):
+    def edit_full_profile(self, name_profile: str) -> str:
         """Редактирование наименования и описания"""
         new_name_profile = self.generate_profile_name()
         new_description_profile = self.generate_profile_description()
@@ -199,7 +200,7 @@ class ProfilesPage(BasePage):
             assert self.page.locator(f'//*[text()="{new_name_profile}"]')
         return new_name_profile
 
-    def copy_profile(self, name_profile):
+    def copy_profile(self, name_profile: str) -> str:
         """Копирование профиля"""
         new_name_profile = self.generate_profile_name()
         new_description_profile = self.generate_profile_description()
@@ -221,7 +222,7 @@ class ProfilesPage(BasePage):
             assert self.page.locator(f'//*[text()="{new_name_profile}"]')
         return new_name_profile
 
-    def copy_existing_profile(self, name_profile):
+    def copy_existing_profile(self, name_profile: str):
         """Копирование профиля с существующим наименованием"""
         copy_button = self.page.locator(
              f'//*[text()="{name_profile}"]//ancestor::prominform-profile-card//span[@nztype="copy"]'
@@ -251,14 +252,14 @@ class ProfilesPage(BasePage):
         # assert apply_button.get_attribute('disabled') == 'true'
         expect(self.page.locator(loc.apply_modals_button)).to_be_disabled()
 
-    def go_to_profile(self, name_profile):
+    def go_to_profile(self, name_profile: str):
         """Переход в профиль"""
         go_to_profile_button = self.page.locator(
              f'//*[text()="{name_profile}"]//ancestor::prominform-profile-card//div[@class="ant-card-body"]'
         )
         go_to_profile_button.click()
 
-    def activate_profile(self, name_profile):
+    def activate_profile(self, name_profile: str):
         """Активация профиля"""
         switch_button = self.page.locator(
             f'//*[text()="{name_profile}"]{loc.switch_button}'
@@ -266,7 +267,7 @@ class ProfilesPage(BasePage):
         switch_button.click()
         expect(switch_button).to_have_class(re.compile('.*ant-switch-checked.*'))
 
-    def deactivate_profile(self, name_profile):
+    def deactivate_profile(self, name_profile: str):
         """Деактивация профиля"""
         switch_button = self.page.locator(
             f'//*[text()="{name_profile}"]{loc.switch_button}'
