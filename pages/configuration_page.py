@@ -11,7 +11,8 @@ class ConfigurationPage(BasePage):
     def __init__(self, page):
         super().__init__(page)
 
-    def generate_scheme_name(self, prefix='Scheme_', length=15):
+    @staticmethod
+    def generate_scheme_name(prefix='Scheme_', length=15):
         """Генерация имени для тестовой схемы"""
         suffix = ''.join(random.choice(string.ascii_lowercase + string.digits)
                          for _ in range(length - len(prefix)))
