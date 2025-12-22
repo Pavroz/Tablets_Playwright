@@ -17,8 +17,7 @@ class AuthPage(BasePage):
         self.page.locator(loc.login).fill(login)
         self.page.locator(loc.password).fill(password)
         self.page.locator(loc.auth_button).click()
-        # sleep(1)
-        expect(self.page.wait_for_url('http://arm-tablets.01-bfv-server.stroki.loc/profiles', timeout=10000))
+        self.page.wait_for_url('http://arm-tablets.01-bfv-server.stroki.loc/profiles', timeout=10000)
         return True
 
     @allure.step('Авторизация с некорректным логином')
