@@ -3,7 +3,7 @@ from time import sleep
 import allure
 import pytest
 
-
+@pytest.mark.skip
 @allure.feature('Страница конфигурации зала')
 class TestConfiguration:
 

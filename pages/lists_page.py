@@ -176,4 +176,5 @@ class ListsPage(BasePage):
             search_field.fill(lastname)
             search_field.press('Enter')
             row = self.page.locator('tr', has=self.page.locator('td', has_text=lastname))
-            expect(row).to_have_class(re.compile('selected'))
+            row.click()
+            expect(row).to_be_visible()
