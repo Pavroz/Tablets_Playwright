@@ -23,7 +23,7 @@ class ListsPage(BasePage):
         return f'{prefix}{suffix}'
 
     @allure.step('Создание участника с генерацией значений')
-    def create_participant(self, middlename=None, subject=None, position=None, image=None):
+    def create_participant(self, middlename=None, subject=None, position=None, image=None) -> str:
         """Создание участника с генерацией значений"""
         self.page.locator(loc.create_button).click()
         lastname_field = self.page.locator(loc.lastname_field)
@@ -175,7 +175,7 @@ class ListsPage(BasePage):
     #     self.__switch_page(value)
 
     @allure.step('Поиск участника по фамилии')
-    def search_participant_by_lastname(self, lastname):
+    def search_participant_by_lastname(self, lastname: str):
             search_field = self.page.locator(loc.search_field)
             search_field.wait_for(state="visible")
             search_field.fill(lastname)
@@ -189,7 +189,7 @@ class Sorting(BasePage):
         super().__init__(page)
 
     @allure.step('Сортировка по каждому значению')
-    def sort_up(self, value):
+    def sort_up(self, value: str):
         self.page.locator(loc.sort_button).click()
         self.page.locator(loc.cleaning_button).click()
 

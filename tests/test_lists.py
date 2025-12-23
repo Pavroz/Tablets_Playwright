@@ -137,7 +137,7 @@ class TestLists:
         lists_page.load_participant()
         lists_page.get_all_participant()
 
-    @allure.story('Позитивные проверки')
+    @allure.story('Позитивные сценарии')
     @allure.title('Проверка переключения страниц')
     @pytest.mark.lists
     def test_pagination_page(self, prepare_profile_and_open_lists, lists_page):
@@ -145,8 +145,8 @@ class TestLists:
         lists_page.switch_page(10)
         lists_page.pagination_page()
 
-    @allure.story('Позитивные проверки')
-    @allure.title('Проверка переключения отображения на 10 строк')
+    @allure.story('Позитивные сценарии')
+    @allure.title('Проверка переключения количества отображения данных')
     @pytest.mark.lists
     @pytest.mark.parametrize('value', [10, 20, 50, 100])
     def test_switch_page(self, prepare_profile_and_open_lists, lists_page, value):
