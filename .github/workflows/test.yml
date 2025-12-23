@@ -1,23 +1,38 @@
 name: UI tests  # Название workflow, отображается в интерфейсе GitHub Actions
 
+#on:
+#  push:
+#    branches:
+#      - main  # Запускаем workflow при пуше в ветку main
+#  pull_request:
+#    branches:
+#      - main  # И при открытии pull request'а в main
+# Для запуска тестов вручную
 on:
-  push:
-    branches:
-      - main  # Запускаем workflow при пуше в ветку main
-  pull_request:
-    branches:
-      - main  # И при открытии pull request'а в main
+  workflow_dispatch:
+    inputs:
+      deployment_target:
+        description: choose tests set
+        required: true
+        type: choice
+        default: smoke
+        options:
+          - smoke
+          - regression
+          - extended
+          - all
 
 jobs:
   run-tests:  # Джоб для запуска тестов
     runs-on: ubuntu-latest  # Используем последнюю версию Ubuntu как CI-окружение
-
+    name: Run UI tests # Название джобы
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4  # Клонируем репозиторий в CI-окружение
-
-      - name: Set up Python
-        uses: actions/setup-python@v5  # Устанавливаем Python
+        uses: actions/checkout@v5  # Клонируем репозиторий в CI-окружение
+        # Вводим actions/checkout@v5 в гугле и смотрим на github актуальную версию
+      - name: Set up Python environment
+        uses: actions/setup-python@v6  # Устанавливаем Python
+        # Вводим actions/setup-python@v2 в гугле и смотрим на github актуальную версию
         with:
           python-version: '3.14'  # Указываем версию Python
 
@@ -28,8 +43,7 @@ jobs:
           playwright install --with-deps  # Устанавливаем Playwright и его зависимости
 
       - name: Run UI tests with pytest and generate Allure results
-        run: |
-          pytest -v -n 3 --alluredir=allure-results
+        run: pytest -v -n 3 --alluredir=allure-results
 
       - name: Upload Allure results
         if: always()  # Всегда выполняем (даже если предыдущий шаг упал)
