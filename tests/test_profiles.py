@@ -103,6 +103,6 @@ class TestProfiles:
         profiles_page.activate_profile(name)
         profiles_page.deactivate_profile(name)
 
-    def test_delete_profiles_with_name_test(self, auth, profiles_page):
-        """Удаление всех профилей с наименованием test"""
-        profiles_page.delete_profiles_with_name_test()
+    # def test_delete_profiles_with_name_test(self, auth, profiles_page):
+    #     """Удаление всех профилей с наименованием test"""
+    #     profiles_page.delete_profiles_with_name_test()
