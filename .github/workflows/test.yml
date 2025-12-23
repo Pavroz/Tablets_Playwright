@@ -15,7 +15,7 @@ on:
         description: choose tests set
         required: true
         type: choice
-        default: smoke
+        default: all
         options:
           - smoke
           - regression
