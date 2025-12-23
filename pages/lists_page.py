@@ -122,16 +122,16 @@ class ListsPage(BasePage):
             # Если ничего не появилось
         raise Exception("Не найдено ни одно из ожидаемых состояний!")
 
-
+    @allure.step('Загрузка участников из файла')
     def load_participant(self):
         """Загрузка участников из файла"""
         with self.page.expect_file_chooser() as fc_info:
             self.page.locator(loc.load_button).click()
         file_chooser = fc_info.value
         file_chooser.set_files(loc.load_participant_file)
-
+    @allure.step('Возвращение списка всех участников с данными')
     def get_all_participant(self) -> List[Dict[str, str]]:
-        """Возвращает список всех участников с данными"""
+        """Возвращение списка всех участников с данными"""
         participants = []
         rows = self.page.locator(loc.line_to_participant)
         rows.first.wait_for(state="visible")  # ждём хотя бы одну строку
@@ -152,14 +152,16 @@ class ListsPage(BasePage):
             print(f'\n{participant}')
         return participants
 
+    @allure.step('Переключение страниц')
     def pagination_page(self):
         pagination = self.page.locator(loc.pagination_button).all()
         for page in pagination:
             page.click()
-            sleep(1)
+            # sleep(1)
 
+    @allure.step('Переключение количества отображения данных')
     # Проба реализации инкапсуляции через __ у метода
-    def __switch_page(self, value: int):
+    def switch_page(self, value: int):
         # Формируем селектор для нужного элемента
         item_locator = f'//div[text()="{value} / стр."]'
         # Открываем dropdown
@@ -168,9 +170,11 @@ class ListsPage(BasePage):
         self.page.locator(item_locator).first.wait_for(state="visible")
         self.page.locator(item_locator).first.click()
 
-    def switch_page(self, value=None):
-        self.__switch_page(value)
+    # @allure.step('Переключение количества отображения данных')
+    # def switch_page(self, value: int):
+    #     self.__switch_page(value)
 
+    @allure.step('Поиск участника по фамилии')
     def search_participant_by_lastname(self, lastname):
             search_field = self.page.locator(loc.search_field)
             search_field.wait_for(state="visible")
