@@ -173,8 +173,13 @@ class ListsPage(BasePage):
 
     def search_participant_by_lastname(self, lastname):
             search_field = self.page.locator(loc.search_field)
+            search_field.wait_for(state="visible")
             search_field.fill(lastname)
             search_field.press('Enter')
-            row = self.page.locator('tr', has=self.page.locator('td', has_text=lastname))
-            row.click()
-            expect(row).to_be_visible()
+            expect(self.page.locator(loc.selected_row)).to_be_visible()
+            print('Активная строка найдена')
+            expect(self.page.locator(f'//td//span[text()="{lastname}"]')).to_be_visible()
+            print('Фамилия в строке найдена')
+            # row = self.page.locator('tr', has=self.page.locator('td', has_text=lastname))
+            # expect(row).to_be_visible()
+            print(self.page.viewport_size)

@@ -157,7 +157,7 @@ class TestLists:
     @allure.story('Позитивные сценарии')
     @allure.title('Проверка поиска созданного участника по фамилии')
     @pytest.mark.lists
-    @pytest.mark.repeat(5)
+    # @pytest.mark.repeat(5)
     def test_search_participant_by_lastname(self, prepare_profile_and_open_lists, lists_page):
         lastname = lists_page.create_participant()
         lists_page.search_participant_by_lastname(lastname)

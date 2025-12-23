@@ -9,14 +9,25 @@ from data import test_data
 
 @pytest.fixture(scope="function")
 def page():
+    headless = True
     with sync_playwright() as p:
-        browser: Browser = p.chromium.launch(
-            channel='chrome',
-            headless=False,
-            args=['--start-maximized', '--disable-cache', '--incognito']
-        )
-        context: BrowserContext = browser.new_context(no_viewport=True)
-        page = context.new_page()
+        if headless:
+            browser: Browser = p.chromium.launch(
+                channel='chrome',
+                headless=True,
+                args=['--window-size=1920,1080', '--disable-cache', '--incognito']
+                # args=['--start-maximized', '--disable-cache', '--incognito']
+            )
+            context: BrowserContext = browser.new_context(viewport={"width":1920,"height":1080}) # type: ignore
+            page = context.new_page()
+        elif not headless:
+            browser: Browser = p.chromium.launch(
+                channel='chrome',
+                headless=False,
+                args=['--start-maximized', '--disable-cache', '--incognito']
+            )
+            context: BrowserContext = browser.new_context(no_viewport=True)  # type: ignore
+            page = context.new_page()
         yield page
         context.close()
         browser.close()
