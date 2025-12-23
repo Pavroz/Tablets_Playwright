@@ -50,3 +50,19 @@ page_100_item = '//div[text()="100 / стр."]'
 # Поиск
 search_field = 'input[placeholder="Поиск"]'
 selected_row = 'tr.selected'
+
+
+sort_button = '//span[text()="Сортировка"]'
+checkbox_lastname = '//span[text()=" Фамилия "]//ancestor::label//input[@type="checkbox"]'
+checkbox_firstname = '//span[text()=" Имя "]//ancestor::label//input[@type="checkbox"]'
+checkbox_middlename = '//span[text()=" Отчество "]//ancestor::label//input[@type="checkbox"]'
+checkbox_subject = '//span[text()=" Субъект "]//ancestor::label//input[@type="checkbox"]'
+checkbox_position = '//span[text()=" Должность "]//ancestor::label//input[@type="checkbox"]'
+checkbox_image = '//span[text()=" Изображение "]//ancestor::label//input[@type="checkbox"]'
+
+# Кнопки возрастания, убывания и очистки
+sort_up = '//span[text()="Возрастание"]'
+sort_down = '//span[text()="Убывание"]'
+cleaning_button = '//span[text()="Очистка"]'
+
+sorting_apply_button = 'nz-modal-container button[nztype="primary"]'

@@ -2,7 +2,7 @@ import pytest
 from playwright.sync_api import sync_playwright, Browser, BrowserContext, Page
 from pages.auth_page import AuthPage
 from pages.configuration_page import ConfigurationPage
-from pages.lists_page import ListsPage
+from pages.lists_page import ListsPage, Sorting
 from pages.profiles_page import ProfilesPage
 from data import test_data
 
@@ -45,6 +45,11 @@ def profiles_page(page: Page):
 def lists_page(page: Page):
     """Инициализация страницы участников"""
     return ListsPage(page)
+
+@pytest.fixture()
+def sorting(page: Page):
+    """Инициализация класса сортировки"""
+    return Sorting(page)
 
 @pytest.fixture()
 def configuration_page(page: Page):

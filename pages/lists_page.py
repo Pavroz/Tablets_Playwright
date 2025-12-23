@@ -182,3 +182,29 @@ class ListsPage(BasePage):
             search_field.press('Enter')
             expect(self.page.locator(loc.selected_row)).to_be_visible()
             expect(self.page.locator(f'//td//span[text()="{lastname}"]')).to_be_visible()
+
+class Sorting(BasePage):
+
+    def __init__(self, page):
+        super().__init__(page)
+
+    @allure.step('Сортировка по каждому значению')
+    def sort_up(self, value):
+        self.page.locator(loc.sort_button).click()
+        self.page.locator(loc.cleaning_button).click()
+
+        if value == 'lastname':
+            self.page.locator(loc.checkbox_lastname).click()
+        if value == 'firstname':
+            self.page.locator(loc.checkbox_firstname).click()
+        if value == 'middlename':
+            self.page.locator(loc.checkbox_middlename).click()
+        if value == 'subject':
+            self.page.locator(loc.checkbox_subject).click()
+        if value == 'position':
+            self.page.locator(loc.checkbox_position).click()
+        if value == 'image':
+            self.page.locator(loc.checkbox_image).click()
+
+        self.page.locator(loc.sort_up).click()
+        self.page.locator(loc.sorting_apply_button).click()

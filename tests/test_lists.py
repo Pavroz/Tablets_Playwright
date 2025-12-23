@@ -161,3 +161,19 @@ class TestLists:
     def test_search_participant_by_lastname(self, prepare_profile_and_open_lists, lists_page):
         lastname = lists_page.create_participant()
         lists_page.search_participant_by_lastname(lastname)
+
+    @allure.story('Позитивные сценарии')
+    @allure.title('Проверка сортировки по каждому значению')
+    @pytest.mark.lists
+    @pytest.mark.parametrize(
+        'value', [
+            'lastname',
+            'firstname',
+            'middlename',
+            'subject',
+            'position',
+            'image'
+        ]
+    )
+    def test_sort_up(self, prepare_profile_and_open_lists, sorting, value):
+        sorting.sort_up(value=value)
