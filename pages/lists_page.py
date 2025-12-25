@@ -231,3 +231,44 @@ class Sorting(BasePage):
     #     self.page.locator(loc.sorting_apply_button).click()
 
 
+    def sort_up_and_down(
+            self,
+            lastname: str = None,
+            firstname: str = None,
+            middlename: str = None,
+            subject: str = None,
+            position: str = None,
+            image: str = None,
+            direction: str = None):
+        self.page.locator(loc.sort_button).click()
+        sleep(1)
+        self.page.locator(loc.cleaning_button).click()
+        sleep(1)
+
+        if lastname:
+            self.page.locator(loc.checkbox_lastname).click()
+            sleep(1)
+        if firstname:
+            self.page.locator(loc.checkbox_firstname).click()
+            sleep(1)
+        if middlename:
+            self.page.locator(loc.checkbox_middlename).click()
+            sleep(1)
+        if subject:
+            self.page.locator(loc.checkbox_subject).click()
+            sleep(1)
+        if position:
+            self.page.locator(loc.checkbox_position).click()
+            sleep(1)
+        if image:
+            self.page.locator(loc.checkbox_image).click()
+            sleep(1)
+        if direction == 'asc':
+            self.page.locator(loc.sort_up).click()
+            sleep(1)
+        if direction == 'desc':
+            self.page.locator(loc.sort_down).click()
+            sleep(1)
+
+        self.page.locator(loc.sorting_apply_button).click()
+        sleep(1)

@@ -215,3 +215,17 @@ class TestLists:
     #     )
 
 
+    @allure.story('')
+    @allure.title('')
+    @pytest.mark.lists
+    @pytest.mark.parametrize('lastname, firstname, middlename, subject, position, image, direction', sort_cases.SORT_CASES)
+    def test_sort_up_and_down(self, preparation, sorting, lastname, firstname, middlename, subject, position, image, direction):
+        sorting.sort_up_and_down(
+            lastname=lastname,
+            firstname=firstname,
+            middlename=middlename,
+            subject=subject,
+            position=position,
+            image=image,
+            direction=direction
+        )
