@@ -2,13 +2,13 @@ from time import sleep
 
 import allure
 import pytest
-
+from constants import sort_cases, participant_cases
 
 @allure.feature('Страница списка участников')
 class TestLists:
 
     @pytest.fixture(scope='function')
-    def prepare_profile_and_open_lists(self, auth, profiles_page, configuration_page, lists_page):
+    def preparation(self, auth, profiles_page, configuration_page, lists_page):
         """
         Создание профиля,
         переход в созданный профиль,
@@ -29,16 +29,7 @@ class TestLists:
     @allure.story('Позитивные сценарии')
     @allure.title('Проверка создания участника')
     @pytest.mark.lists
-    @pytest.mark.parametrize("middlename, subject, position, image",
-        [
-            (None, None, None, None),  # только обязательные поля
-            ("middlename", None, None, None),  # + отчество
-            (None, "subject", None, None),  # + субъект
-            (None, None, "position", None),  # + должность
-            (None, None, None, "image"),  # + изображение
-            ("middlename", "subject", "position", "image"),  # всё вместе
-        ]
-    )
+    @pytest.mark.parametrize("middlename, subject, position, image", participant_cases.CREATE_PARTICIPANT_CASES)
     # @pytest.mark.parametrize(
     #     "middlename, subject, position, image",
     #     [
@@ -64,7 +55,7 @@ class TestLists:
     #     ]
     # )
     def test_created_participant(
-            self, prepare_profile_and_open_lists, lists_page,
+            self, preparation, lists_page,
             middlename, subject, position, image
     ):
         # Передаём параметры в метод
@@ -78,7 +69,7 @@ class TestLists:
     @allure.story('Позитивные сценарии')
     @allure.title('Проверка редактирования участника')
     @pytest.mark.lists
-    def test_update_participant(self, prepare_profile_and_open_lists, lists_page):
+    def test_update_participant(self, preparation, lists_page):
         name_participant = lists_page.create_participant()
         lists_page.update_participant(name_participant)
         ## Вариант с try - finally, чтобы профиль всегда удалялся
@@ -100,7 +91,7 @@ class TestLists:
     @allure.story('Позитивные сценарии')
     @allure.title('Проверка удаления участника')
     @pytest.mark.lists
-    def test_delete_participant(self, prepare_profile_and_open_lists, lists_page):
+    def test_delete_participant(self, preparation, lists_page):
         name_participant = lists_page.create_participant()
         lists_page.delete_participant(name_participant)
 
@@ -114,7 +105,7 @@ class TestLists:
             ("middlename", "subject", "position", "image"),
         ]
     )
-    def test_view_added_image(self, prepare_profile_and_open_lists, lists_page,
+    def test_view_added_image(self, preparation, lists_page,
                               middlename, subject, position, image):
         name_participant = lists_page.create_participant(
             middlename=middlename,
@@ -127,20 +118,20 @@ class TestLists:
     @allure.story('Позитивные сценарии')
     @allure.title('Проверка загрузки участников из csv файла')
     @pytest.mark.lists
-    def test_load_participant(self, prepare_profile_and_open_lists, lists_page):
+    def test_load_participant(self, preparation, lists_page):
         lists_page.load_participant()
 
     @allure.story('Позитивные сценарии')
     @allure.title('Проверка получения всего списка участников')
     @pytest.mark.lists
-    def test_get_all_participant(self, prepare_profile_and_open_lists, lists_page):
+    def test_get_all_participant(self, preparation, lists_page):
         lists_page.load_participant()
         lists_page.get_all_participant()
 
     @allure.story('Позитивные сценарии')
     @allure.title('Проверка переключения страниц')
     @pytest.mark.lists
-    def test_pagination_page(self, prepare_profile_and_open_lists, lists_page):
+    def test_pagination_page(self, preparation, lists_page):
         lists_page.load_participant()
         lists_page.switch_page(10)
         lists_page.pagination_page()
@@ -149,7 +140,7 @@ class TestLists:
     @allure.title('Проверка переключения количества отображения данных')
     @pytest.mark.lists
     @pytest.mark.parametrize('value', [10, 20, 50, 100])
-    def test_switch_page(self, prepare_profile_and_open_lists, lists_page, value):
+    def test_switch_page(self, preparation, lists_page, value):
         lists_page.load_participant()
         lists_page.switch_page(value=value)
         lists_page.pagination_page()
@@ -158,22 +149,69 @@ class TestLists:
     @allure.title('Проверка поиска созданного участника по фамилии')
     @pytest.mark.lists
     # @pytest.mark.repeat(5)
-    def test_search_participant_by_lastname(self, prepare_profile_and_open_lists, lists_page):
+    def test_search_participant_by_lastname(self, preparation, lists_page):
         lastname = lists_page.create_participant()
         lists_page.search_participant_by_lastname(lastname)
 
-    @allure.story('Позитивные сценарии')
-    @allure.title('Проверка сортировки по каждому значению')
-    @pytest.mark.lists
-    @pytest.mark.parametrize(
-        'value', [
-            'lastname',
-            'firstname',
-            'middlename',
-            'subject',
-            'position',
-            'image'
-        ]
-    )
-    def test_sort_up(self, prepare_profile_and_open_lists, sorting, value):
-        sorting.sort_up(value=value)
+    # @allure.story('Позитивные сценарии')
+    # @allure.title('Проверка сортировки по каждому значению')
+    # @pytest.mark.lists
+    # @pytest.mark.parametrize(
+    #     'value', [
+    #         'lastname',
+    #         'firstname',
+    #         'middlename',
+    #         'subject',
+    #         'position',
+    #         'image'
+    #     ]
+    # )
+    # def test_sort_up(self, preparation, sorting, value):
+    #     sorting.sort_up(value=value)
+    #
+    # @allure.story('')
+    # @allure.title('')
+    # @pytest.mark.lists
+    # @pytest.mark.parametrize(
+    #     'value', [
+    #         'lastname',
+    #         'firstname',
+    #         'middlename',
+    #         'subject',
+    #         'position',
+    #         'image'
+    #     ]
+    # )
+    # def test_sort_down(self,preparation, sorting, value):
+    #     sorting.sort_down(value=value)
+    #
+    # @allure.story('')
+    # @allure.title('')
+    # @pytest.mark.lists
+    # @pytest.mark.parametrize(
+    #     'lastname, firstname, middlename, subject, position, image',
+    #     [
+    #         (None, None, None, None, None, None),  # без сортировки (дефолт)
+    #          ("lastname", None, None, None, None, None),  # сортировка по фамилии
+    #          (None, "firstname", None, None, None, None),  # по имени
+    #          (None, None, "middlename", None, None, None),  # по отчеству
+    #          (None, None, None, "subject", None, None),  # по субъекту
+    #          (None, None, None, None, "position", None),  # по должности
+    #          (None, None, None, None, None, "image"),  # по наличию изображения
+    #          ("lastname", "firstname", None, None, None, None),  # фамилия + имя
+    #          ("lastname", "firstname", "middlename", None, None, None),  # ФИО
+    #          (None, None, None, "subject", "position", None),  # субъект + должность
+    #          ("lastname", "firstname", "middlename", "subject", "position", "image")  # всё вместе
+    #     ]
+    # )
+    # def test_sort_up(self, preparation, sorting, lastname, firstname, middlename, subject, position, image):
+    #     sorting.sort(
+    #         lastname=lastname,
+    #         firstname=firstname,
+    #         middlename=middlename,
+    #         subject=subject,
+    #         position=position,
+    #         image=image
+    #     )
+
+

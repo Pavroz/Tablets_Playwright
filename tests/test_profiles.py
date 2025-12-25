@@ -10,7 +10,7 @@ from playwright.sync_api import expect
 class TestProfiles:
 
     @pytest.fixture(scope='function')
-    def prepare_profile(self, profiles_page):
+    def preparation(self, profiles_page):
         """Создание профиля и удаление профиля"""
         name = None
         try:
@@ -22,13 +22,13 @@ class TestProfiles:
     @allure.story('Позитивные сценарии')
     @allure.title('Проверка создания профиля')
     @pytest.mark.profiles
-    def test_create_profile(self, auth, prepare_profile):
+    def test_create_profile(self, auth, preparation):
         pass
 
     @allure.story('Позитивные сценарии')
     @allure.title('Проверка удаления профиля')
     @pytest.mark.profiles
-    def test_delete_profile(self, auth, prepare_profile):
+    def test_delete_profile(self, auth, preparation):
         pass
 
     @allure.story('Позитивные сценарии')
@@ -42,8 +42,8 @@ class TestProfiles:
     @allure.story('Позитивные сценарии')
     @allure.title('Проверка изменения описания профиля')
     @pytest.mark.profiles
-    def test_edit_description_profile(self, auth, profiles_page, prepare_profile):
-        name = prepare_profile
+    def test_edit_description_profile(self, auth, profiles_page, preparation):
+        name = preparation
         profiles_page.edit_description_profile(name)
 
     @allure.story('Позитивные сценарии')
@@ -57,23 +57,23 @@ class TestProfiles:
     @allure.story('Позитивные сценарии')
     @allure.title('Проверка копирования профиля')
     @pytest.mark.profiles
-    def test_copy_profile(self, auth, profiles_page, prepare_profile):
-        name = prepare_profile
+    def test_copy_profile(self, auth, profiles_page, preparation):
+        name = preparation
         new_name_profile = profiles_page.copy_profile(name)
         profiles_page.delete_profile(new_name_profile)
 
     @allure.story('Негативные сценарии')
     @allure.title('Проверка создания профиля с существующим наименованием')
     @pytest.mark.profiles
-    def test_create_existing_profile(self, auth, profiles_page, prepare_profile):
-        name = prepare_profile
+    def test_create_existing_profile(self, auth, profiles_page, preparation):
+        name = preparation
         profiles_page.create_existing_profile(name)
 
     @allure.story('Негативные сценарии')
     @allure.title('Проверка копирования профиля с существующим наименованием')
     @pytest.mark.profiles
-    def test_copy_existing_profile(self, auth, profiles_page, prepare_profile):
-        name = prepare_profile
+    def test_copy_existing_profile(self, auth, profiles_page, preparation):
+        name = preparation
         profiles_page.copy_existing_profile(name)
 
     @allure.story('Негативные сценарии')
@@ -91,15 +91,15 @@ class TestProfiles:
     @allure.story('Позитивные сценарии')
     @allure.title('Проверка активации профиля')
     @pytest.mark.profiles
-    def test_activate_profile(self, auth, profiles_page, prepare_profile):
-        name = prepare_profile
+    def test_activate_profile(self, auth, profiles_page, preparation):
+        name = preparation
         profiles_page.activate_profile(name)
 
     @allure.story('Позитивные сценарии')
     @allure.title('Проверка деактивации профиля')
     @pytest.mark.profiles
-    def test_deactivate_profile(self, auth, profiles_page, prepare_profile):
-        name = prepare_profile
+    def test_deactivate_profile(self, auth, profiles_page, preparation):
+        name = preparation
         profiles_page.activate_profile(name)
         profiles_page.deactivate_profile(name)
 

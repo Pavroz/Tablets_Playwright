@@ -4,6 +4,7 @@ from playwright.sync_api import expect
 from time import sleep
 import random
 import string
+import allure
 
 
 class ConfigurationPage(BasePage):
@@ -17,11 +18,11 @@ class ConfigurationPage(BasePage):
         suffix = ''.join(random.choice(string.ascii_lowercase + string.digits)
                          for _ in range(length - len(prefix)))
         return f'{prefix}{suffix}'
-
+    @allure.step('')
     def go_to_lists_page(self):
         """Переход на страницу списка участников"""
         self.page.locator(loc.lists_page).click()
-
+    @allure.step('')
     def create_scheme(self) -> str:
         """Создание схемы"""
         # name = "Scheme_" + str(random.randint(1000, 9999))
@@ -40,13 +41,13 @@ class ConfigurationPage(BasePage):
         file_chooser.set_files(loc.scheme_path)
         self.page.locator(loc.create_button).click(timeout=10000)
         return name
-
+    @allure.step('')
     def choice_scheme(self, name_scheme: str):
         """Выбор схемы в дропдауне"""
         self.page.locator(loc.schemes_selector).click()
         self.page.locator(loc.schemes_dropdown).wait_for(state='visible')
         self.page.locator(loc.schemes_in_dropdown, has_text=name_scheme).click()
-
+    @allure.step('')
     def apply_scheme(self):
         """Применение схемы"""
         # Ждём, пока кнопка станет видимой и enabled
@@ -54,7 +55,7 @@ class ConfigurationPage(BasePage):
         button.wait_for(state='visible')
         # button.wait_for(state="enabled")
         button.click()
-
+    @allure.step('')
     def edit_scheme(self, name_scheme: str):
         # new_name_scheme = "Scheme_" + str(random.randint(1000, 9999))
         new_name_scheme = self.generate_scheme_name()
@@ -62,7 +63,7 @@ class ConfigurationPage(BasePage):
         self.page.locator(loc.edit_scheme_button).click()
         self.page.locator(loc.name_field_in_edit_scheme).fill(new_name_scheme)
         self.page.locator(loc.save_button_in_edit_scheme).click(timeout=10000)
-
+    @allure.step('')
     def delete_scheme(self, name_scheme: str):
         """Выбор схемы в списке и удаление"""
         self.choice_scheme(name_scheme)
@@ -75,7 +76,7 @@ class ConfigurationPage(BasePage):
         self.page.locator(loc.schemes_dropdown).wait_for(state='visible')
         # Проверка, что элемент не существует вообще
         expect(self.page.locator(loc.schemes_in_dropdown, has_text=name_scheme)).to_have_count(0)
-
+    @allure.step('')
     def copy_scheme(self, name_scheme: str):
         """Выбор схемы в списке и копирование"""
         new_name_scheme = self.generate_scheme_name()
@@ -91,7 +92,7 @@ class ConfigurationPage(BasePage):
         self.page.locator(loc.schemes_dropdown).wait_for(state='visible')
         expect(self.page.locator(loc.schemes_in_dropdown, has_text=name_scheme)).to_be_visible()
 
-
+    @allure.step('')
     def load_new_scheme(self, name_scheme: str):
         """Выбор схемы в списке и загрузка новой схемы"""
         # Выбор схемы
@@ -105,7 +106,7 @@ class ConfigurationPage(BasePage):
         # Проверка, что лоадер на кнопке пропал
         expect(self.page.locator(loc.loader_on_button)).not_to_be_visible()
         # self.page.locator(loc.loader_on_button).wait_for(state='detached')
-
+    @allure.step('')
     def download_scheme(self, name_scheme: str):
         """Выбор схемы в списке и скачивание"""
         self.choice_scheme(name_scheme)
@@ -119,7 +120,7 @@ class ConfigurationPage(BasePage):
         print(download.url)
         print(download.page)
 
-
+    @allure.step('')
     def create_max_number_of_characters_scheme(self, quantity=256) -> str:
         """Создание схемы с максимальным количеством символов в названии"""
         name = ''.join(random.choice(string.ascii_lowercase + string.digits)
@@ -140,7 +141,7 @@ class ConfigurationPage(BasePage):
         expect(self.page.locator(loc.create_button)).to_be_disabled()
         self.page.locator(loc.cancel_button).click()
         return name
-
+    @allure.step('')
     def create_place(self, name_scheme: str):
         # Выбор схемы
         self.choice_scheme(name_scheme)
