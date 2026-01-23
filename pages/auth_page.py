@@ -17,7 +17,7 @@ class AuthPage(BasePage):
         self.page.locator(loc.password).fill(password)
 
     def __click_login(self):
-        self.page.locator(loc.login).click()
+        self.page.locator(loc.auth_button).click()
 
 
     @allure.step('Авторизация с корректным логином и паролем')
