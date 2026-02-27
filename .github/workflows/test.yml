@@ -26,6 +26,9 @@ jobs:
   run-tests:  # Джоб для запуска тестов
     runs-on: ubuntu-latest  # Используем последнюю версию Ubuntu как CI-окружение
     name: Run UI tests # Название джобы
+    env: # Подтягиваются секреты созданные в гитхабе
+      LOGIN: ${{ secrets.LOGIN }}
+      PASSWORD: ${{ secrets.PASSWORD }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v5  # Клонируем репозиторий в CI-окружение

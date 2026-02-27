@@ -4,7 +4,7 @@ from pages.base_page import BasePage
 from locators import auth_locators as loc
 import allure
 from playwright.sync_api import expect
-from data import test_data
+from config import config
 
 class AuthPage(BasePage):
     page_url = '/auth'
@@ -24,7 +24,7 @@ class AuthPage(BasePage):
     @allure.step('Авторизация с корректным логином и паролем')
     def auth_correct_login_and_password(self) -> bool:
         """Авторизация с корректным логином и паролем"""
-        self.__fill_login_and_password(test_data.LOGIN, test_data.PASSWORD)
+        self.__fill_login_and_password(config.LOGIN, config.PASSWORD)
         self.__click_login()
         self.page.wait_for_url('http://arm-tablets.01-bfv-server.stroki.loc/profiles', timeout=10000)
         return True
@@ -33,7 +33,7 @@ class AuthPage(BasePage):
     def auth_incorrect_login(self):
         """Авторизация с некорректным логином"""
         login = 'qwe'
-        self.__fill_login_and_password(login, test_data.PASSWORD)
+        self.__fill_login_and_password(login, config.PASSWORD)
         self.__click_login()
         notification_text = self.page.locator(loc.notification).inner_text()
         assert notification_text == f"Не удалось авторизоваться: \"Пользователь с логином '{login}' не найден\""
@@ -41,7 +41,7 @@ class AuthPage(BasePage):
     @allure.step('Авторизация с некорректным паролем')
     def auth_incorrect_password(self):
         """Авторизация с некорректным паролем"""
-        self.__fill_login_and_password(test_data.LOGIN, 'qwe')
+        self.__fill_login_and_password(config.LOGIN, 'qwe')
         self.__click_login()
         notification_text = self.page.locator(loc.notification).inner_text()
         assert notification_text == f'Не удалось авторизоваться: "Неверные учетные данные"'
@@ -49,14 +49,14 @@ class AuthPage(BasePage):
     @allure.step('Авторизация с активным восстановлением конфигурации')
     def auth_active_recovery_conf(self):
         """Авторизация с активным восстановлением конфигурации"""
-        self.__fill_login_and_password(test_data.LOGIN, test_data.PASSWORD)
+        self.__fill_login_and_password(config.LOGIN, config.PASSWORD)
         expect(self.page.locator(loc.recovery_conf_active)).to_have_class(re.compile("ant-switch-checked"))
         self.__click_login()
 
     @allure.step('Авторизация с неактивным восстановлением конфигурации')
     def auth_inactive_recovery_conf(self):
         """Авторизация с неактивным восстановлением конфигурации"""
-        self.__fill_login_and_password(test_data.LOGIN, test_data.PASSWORD)
+        self.__fill_login_and_password(config.LOGIN, config.PASSWORD)
         recovery_active = self.page.locator(loc.recovery_conf_active)
         expect(self.page.locator('nz-switch[formcontrolname="personalization"] button')
                ).to_have_class(re.compile('.*ant-switch-checked.*'), timeout=5000)
