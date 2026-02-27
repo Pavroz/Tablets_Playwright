@@ -1,6 +1,6 @@
 import pytest
 import allure
-from data import test_data
+from data_test import test_data
 
 
 @allure.feature('Авторизация')

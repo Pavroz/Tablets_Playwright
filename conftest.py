@@ -4,7 +4,7 @@ from pages.auth_page import AuthPage
 from pages.configuration_page import ConfigurationPage
 from pages.lists_page import ListsPage, Sorting
 from pages.profiles_page import ProfilesPage
-from data import test_data
+from data_test import test_data
 
 
 @pytest.fixture(scope="function")
