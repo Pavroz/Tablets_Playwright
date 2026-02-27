@@ -253,7 +253,8 @@ class ProfilesPage(BasePage):
             f'//*[text()="{name_profile}"]{loc.switch_button}'
         )
         switch_button.click()
-        expect(switch_button).to_have_class(re.compile('.*ant-switch-checked.*'))
+        # expect(switch_button).to_have_class(re.compile('.*ant-switch-checked.*'))
+        expect(switch_button).to_have_class(re.compile('.ant-switch-checked'))
 
     @allure.step('Деактивация профиля')
     def deactivate_profile(self, name_profile: str):
@@ -263,4 +264,5 @@ class ProfilesPage(BasePage):
         )
         switch_button.click()
         # проверяем, что класс "ant-switch-checked" пропал
-        expect(switch_button).not_to_have_class(re.compile(".*ant-switch-checked.*"))
+        # expect(switch_button).not_to_have_class(re.compile('.*ant-switch-checked.*'))
+        expect(switch_button).not_to_have_class(re.compile('.ant-switch-checked'))

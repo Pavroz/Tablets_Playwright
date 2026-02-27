@@ -4,7 +4,7 @@ from pages.auth_page import AuthPage
 from pages.configuration_page import ConfigurationPage
 from pages.lists_page import ListsPage, Sorting
 from pages.profiles_page import ProfilesPage
-
+import allure
 
 @pytest.fixture(scope="function")
 def page():
@@ -61,3 +61,22 @@ def auth(auth_page):
     auth_page.auth_correct_login_and_password()
     yield auth_page  # возвращаем драйвер (или страницу)
 
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item):
+    # даём pytest выполнить тест
+    outcome = yield
+    report = outcome.get_result()
+
+    # нас интересует только падение в теле теста
+    if report.when == "call" and report.failed:
+        page = item.funcargs.get("page")
+
+        # если тест использовал page
+        if page:
+            screenshot_bytes = page.screenshot()
+
+            allure.attach(
+                screenshot_bytes,
+                name=f"screenshot_on_failure_{item.name}",
+                attachment_type=allure.attachment_type.PNG,
+            )
