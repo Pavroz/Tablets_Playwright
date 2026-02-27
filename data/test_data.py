@@ -1,2 +1,2 @@
-login: str = '0'
-password: str = '321'
+LOGIN: str = '0'
+PASSWORD: str = '321'
