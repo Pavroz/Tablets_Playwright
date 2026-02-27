@@ -4,7 +4,7 @@ from pages.base_page import BasePage
 from locators import auth_locators as loc
 import allure
 from playwright.sync_api import expect
-from data_test import test_data
+from data import test_data
 
 class AuthPage(BasePage):
     page_url = '/auth'

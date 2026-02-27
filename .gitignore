@@ -5,4 +5,5 @@ venv
 __pycache__
 allure-results
 allure-report
-data_test
+data
+.env
